@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/physiomap/static/css/main.df0be43c.css",
-    "main.js": "/physiomap/static/js/main.2908e611.js",
+    "main.js": "/physiomap/static/js/main.4b5259d7.js",
     "index.html": "/physiomap/index.html",
     "main.df0be43c.css.map": "/physiomap/static/css/main.df0be43c.css.map",
-    "main.2908e611.js.map": "/physiomap/static/js/main.2908e611.js.map"
+    "main.4b5259d7.js.map": "/physiomap/static/js/main.4b5259d7.js.map"
   },
   "entrypoints": [
     "static/css/main.df0be43c.css",
-    "static/js/main.2908e611.js"
+    "static/js/main.4b5259d7.js"
   ]
 }

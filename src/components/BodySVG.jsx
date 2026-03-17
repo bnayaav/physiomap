@@ -1,389 +1,332 @@
 import React from 'react';
 
-export default function BodySVG({ layers, selectedPoint, onPointClick, gender, view }) {
-  const showLayer = (name) => layers[name];
-
-  const pointColors = {
-    GB20: '#00d4ff', ST11: '#a78bfa', LI15: '#fbbf24', GB21: '#f87171',
-    LI11: '#34d399', PC6: '#60a5fa', CV17: '#fb923c', BL23: '#f87171',
-    GB30: '#4ade80', ST36: '#fbbf24', KD3: '#818cf8',
-  };
+export default function BodySVG({ layers, selectedPoint, onPointClick, gender }) {
+  const show = (name) => layers[name];
+  const isFemale = gender === 'female';
 
   const allPoints = [
-    { id: 'GB20', cx: 100, cy: 52, label: 'GB20' },
-    { id: 'ST11', cx: 88, cy: 72, label: 'ST11' },
-    { id: 'LI15', cx: 56, cy: 88, label: 'LI15' },
-    { id: 'LI15R', cx: 144, cy: 88, label: 'LI15', pointId: 'LI15' },
-    { id: 'GB21', cx: 80, cy: 82, label: 'GB21' },
-    { id: 'GB21R', cx: 120, cy: 82, label: 'GB21', pointId: 'GB21' },
-    { id: 'LI11', cx: 36, cy: 175, label: 'LI11' },
-    { id: 'LI11R', cx: 164, cy: 175, label: 'LI11', pointId: 'LI11' },
-    { id: 'PC6', cx: 34, cy: 236, label: 'PC6' },
-    { id: 'CV17', cx: 100, cy: 118, label: 'CV17' },
-    { id: 'BL23', cx: 87, cy: 178, label: 'BL23' },
-    { id: 'BL23R', cx: 113, cy: 178, label: 'BL23', pointId: 'BL23' },
-    { id: 'GB30', cx: 68, cy: 218, label: 'GB30' },
-    { id: 'ST36', cx: 70, cy: 385, label: 'ST36' },
-    { id: 'ST36R', cx: 130, cy: 385, label: 'ST36', pointId: 'ST36' },
-    { id: 'KD3', cx: 60, cy: 462, label: 'KD3' },
+    { id: 'GB20', cx: 100, cy: 50 },
+    { id: 'ST11', cx: 90,  cy: 70 },
+    { id: 'GB21', cx: 78,  cy: 80 }, { id: 'GB21', cx: 122, cy: 80 },
+    { id: 'LI15', cx: 54,  cy: 88 }, { id: 'LI15', cx: 146, cy: 88 },
+    { id: 'CV17', cx: 100, cy: 118 },
+    { id: 'LI11', cx: 34,  cy: 174 }, { id: 'LI11', cx: 166, cy: 174 },
+    { id: 'PC6',  cx: 32,  cy: 234 },
+    { id: 'BL23', cx: 88,  cy: 176 }, { id: 'BL23', cx: 112, cy: 176 },
+    { id: 'GB30', cx: 66,  cy: 216 }, { id: 'GB30', cx: 134, cy: 216 },
+    { id: 'ST36', cx: 68,  cy: 382 }, { id: 'ST36', cx: 132, cy: 382 },
+    { id: 'KD3',  cx: 58,  cy: 460 }, { id: 'KD3',  cx: 142, cy: 460 },
   ];
 
+  const POINT_COLORS = {
+    GB20:'#00d4ff', ST11:'#a78bfa', GB21:'#f87171', LI15:'#fbbf24',
+    CV17:'#fb923c', LI11:'#34d399', PC6:'#60a5fa',  BL23:'#f87171',
+    GB30:'#4ade80', ST36:'#fbbf24', KD3:'#818cf8',
+  };
+
   return (
-    <svg
-      viewBox="0 0 200 520"
-      style={{ width: '100%', height: '100%', maxHeight: '560px' }}
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg viewBox="0 0 200 520" style={{ width: '100%', maxHeight: '560px', display: 'block' }}
+      xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="skinM" cx="50%" cy="35%" r="65%">
-          <stop offset="0%" stopColor="#d4956a" />
-          <stop offset="100%" stopColor="#a0714f" />
+        <radialGradient id="headGrad" cx="42%" cy="35%" r="60%">
+          <stop offset="0%" stopColor={isFemale ? '#f0b896' : '#d4895a'} />
+          <stop offset="60%" stopColor={isFemale ? '#d4906a' : '#b86a38'} />
+          <stop offset="100%" stopColor={isFemale ? '#a86040' : '#8a4820'} />
         </radialGradient>
-        <radialGradient id="skinF" cx="50%" cy="35%" r="65%">
-          <stop offset="0%" stopColor="#e8a882" />
-          <stop offset="100%" stopColor="#c07858" />
+        <radialGradient id="torsoGrad" cx="40%" cy="30%" r="65%">
+          <stop offset="0%" stopColor={isFemale ? '#e8a878' : '#cc7840'} />
+          <stop offset="50%" stopColor={isFemale ? '#c8886a' : '#a85830'} />
+          <stop offset="100%" stopColor={isFemale ? '#9a5838' : '#7a3818'} />
         </radialGradient>
-        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        <radialGradient id="armGradL" cx="70%" cy="20%" r="70%">
+          <stop offset="0%" stopColor={isFemale ? '#e0a080' : '#c87040'} />
+          <stop offset="100%" stopColor={isFemale ? '#a06040' : '#804020'} />
+        </radialGradient>
+        <radialGradient id="armGradR" cx="30%" cy="20%" r="70%">
+          <stop offset="0%" stopColor={isFemale ? '#e0a080' : '#c87040'} />
+          <stop offset="100%" stopColor={isFemale ? '#a06040' : '#804020'} />
+        </radialGradient>
+        <radialGradient id="legGradL" cx="65%" cy="15%" r="70%">
+          <stop offset="0%" stopColor={isFemale ? '#d89870' : '#c07040'} />
+          <stop offset="100%" stopColor={isFemale ? '#9a5838' : '#7a3818'} />
+        </radialGradient>
+        <radialGradient id="legGradR" cx="35%" cy="15%" r="70%">
+          <stop offset="0%" stopColor={isFemale ? '#d89870' : '#c07040'} />
+          <stop offset="100%" stopColor={isFemale ? '#9a5838' : '#7a3818'} />
+        </radialGradient>
+        <radialGradient id="hairGrad" cx="50%" cy="20%" r="70%">
+          <stop offset="0%" stopColor={isFemale ? '#5a3010' : '#2a1808'} />
+          <stop offset="100%" stopColor={isFemale ? '#3a1a08' : '#180c00'} />
+        </radialGradient>
+        <linearGradient id="boneGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#e8d8b0" />
+          <stop offset="50%" stopColor="#f5ecd0" />
+          <stop offset="100%" stopColor="#d0c098" />
+        </linearGradient>
+        <radialGradient id="muscleRed" cx="40%" cy="30%" r="65%">
+          <stop offset="0%" stopColor="#ff9966" />
+          <stop offset="100%" stopColor="#cc4422" />
+        </radialGradient>
+        <radialGradient id="muscleDark" cx="40%" cy="30%" r="65%">
+          <stop offset="0%" stopColor="#ff7744" />
+          <stop offset="100%" stopColor="#aa3311" />
+        </radialGradient>
+        <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="2.5" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
-        <filter id="softglow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="2" dy="3" stdDeviation="3" floodColor="rgba(0,0,0,0.5)" />
+        </filter>
+        <filter id="innerGlow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="1.5" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
 
-      {/* ========== BODY SILHOUETTE ========== */}
-      <g id="body-base">
-        {/* Head */}
-        <ellipse cx="100" cy="37" rx="26" ry="30"
-          fill={`url(#skin${gender === 'female' ? 'F' : 'M'})`}
-          stroke="#7a5030" strokeWidth="1" />
+      <g filter="url(#softShadow)">
+        {/* HEAD */}
+        <ellipse cx="100" cy="36" rx="27" ry="31" fill="url(#headGrad)" />
+        <ellipse cx="92" cy="26" rx="12" ry="10" fill="rgba(255,255,255,0.12)" />
+        <ellipse cx="100" cy="60" rx="14" ry="5" fill="rgba(0,0,0,0.18)" />
+        <ellipse cx="91" cy="38" rx="3.5" ry="2.5" fill="rgba(0,0,0,0.25)" />
+        <ellipse cx="109" cy="38" rx="3.5" ry="2.5" fill="rgba(0,0,0,0.25)" />
+        <ellipse cx="91" cy="37" rx="2" ry="1.5" fill="rgba(255,255,255,0.6)" />
+        <ellipse cx="109" cy="37" rx="2" ry="1.5" fill="rgba(255,255,255,0.6)" />
+        <path d="M96,46 Q100,49 104,46" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="1" strokeLinecap="round" />
+        <path d="M97,43 Q100,44.5 103,43" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="0.8" />
+        <ellipse cx="73" cy="37" rx="4" ry="6" fill="url(#headGrad)" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5" />
+        <ellipse cx="127" cy="37" rx="4" ry="6" fill="url(#headGrad)" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5" />
 
-        {/* Hair (female) */}
-        {gender === 'female' && (
+        {/* HAIR */}
+        {isFemale ? (
           <>
-            <ellipse cx="100" cy="18" rx="26" ry="14" fill="#4a2c0a" />
-            <ellipse cx="76" cy="30" rx="8" ry="18" fill="#4a2c0a" />
-            <ellipse cx="124" cy="30" rx="8" ry="18" fill="#4a2c0a" />
+            <ellipse cx="100" cy="14" rx="27" ry="16" fill="url(#hairGrad)" />
+            <path d="M73,20 Q68,35 70,55 Q72,65 76,70" fill="none" stroke="#3a1a08" strokeWidth="6" strokeLinecap="round" />
+            <path d="M127,20 Q132,35 130,55 Q128,65 124,70" fill="none" stroke="#3a1a08" strokeWidth="6" strokeLinecap="round" />
+            <ellipse cx="85" cy="12" rx="10" ry="6" fill="rgba(255,255,255,0.1)" />
+          </>
+        ) : (
+          <path d="M74,22 Q74,10 100,8 Q126,10 126,22 Q118,14 100,13 Q82,14 74,22 Z" fill="url(#hairGrad)" />
+        )}
+
+        {/* NECK */}
+        <path d="M88,63 Q87,74 88,82 L112,82 Q113,74 112,63 Z" fill="url(#torsoGrad)" />
+        <path d="M91,63 Q91,74 91,82" stroke="rgba(0,0,0,0.1)" strokeWidth="1" fill="none" />
+        <path d="M109,63 Q109,74 109,82" stroke="rgba(0,0,0,0.1)" strokeWidth="1" fill="none" />
+
+        {/* TORSO */}
+        <path d="M62,78 Q54,100 53,132 Q52,170 56,194 L144,194 Q148,170 147,132 Q146,100 138,78 Z" fill="url(#torsoGrad)" />
+        <ellipse cx="88" cy="96" rx="16" ry="12" fill="rgba(255,255,255,0.07)" />
+        <ellipse cx="112" cy="96" rx="16" ry="12" fill="rgba(255,255,255,0.07)" />
+        <line x1="100" y1="80" x2="100" y2="192" stroke="rgba(0,0,0,0.12)" strokeWidth="1.5" />
+        {isFemale && (
+          <>
+            <ellipse cx="86" cy="108" rx="15" ry="13" fill="rgba(200,130,90,0.5)" />
+            <ellipse cx="114" cy="108" rx="15" ry="13" fill="rgba(200,130,90,0.5)" />
+            <ellipse cx="82" cy="104" rx="7" ry="5" fill="rgba(255,255,255,0.1)" />
+            <ellipse cx="110" cy="104" rx="7" ry="5" fill="rgba(255,255,255,0.1)" />
           </>
         )}
 
-        {/* Neck */}
-        <rect x="90" y="63" width="20" height="18" rx="4"
-          fill={gender === 'female' ? '#c88060' : '#b07040'}
-          stroke="#7a5030" strokeWidth="0.8" />
+        {/* SHOULDERS */}
+        <ellipse cx="54" cy="92" rx="16" ry="13" fill="url(#armGradL)" />
+        <ellipse cx="50" cy="88" rx="8" ry="5" fill="rgba(255,255,255,0.1)" />
+        <ellipse cx="146" cy="92" rx="16" ry="13" fill="url(#armGradR)" />
 
-        {/* Torso */}
-        <path d="M66,79 Q58,98 57,130 Q56,168 60,192 L140,192 Q144,168 143,130 Q142,98 134,79 Z"
-          fill={`url(#skin${gender === 'female' ? 'F' : 'M'})`}
-          stroke="#7a5030" strokeWidth="1" />
+        {/* ARMS */}
+        <path d="M42,90 Q30,114 28,148 Q26,166 30,180 Q35,183 40,181 Q45,179 46,176 Q48,162 50,148 Q52,118 54,98 Z" fill="url(#armGradL)" />
+        <path d="M36,105 Q33,130 34,158" stroke="rgba(255,255,255,0.1)" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M158,90 Q170,114 172,148 Q174,166 170,180 Q165,183 160,181 Q155,179 154,176 Q152,162 150,148 Q148,118 146,98 Z" fill="url(#armGradR)" />
 
-        {/* Female chest */}
-        {gender === 'female' && (
+        {/* FOREARMS */}
+        <path d="M29,180 Q24,204 24,228 Q24,244 28,252 Q33,255 38,253 Q43,251 44,247 Q46,240 46,228 Q46,204 42,180 Z" fill="url(#armGradL)" />
+        <path d="M171,180 Q176,204 176,228 Q176,244 172,252 Q167,255 162,253 Q157,251 156,247 Q154,240 154,228 Q154,204 158,180 Z" fill="url(#armGradR)" />
+
+        {/* HANDS */}
+        <ellipse cx="35" cy="258" rx="10" ry="13" fill="url(#armGradL)" />
+        <ellipse cx="32" cy="253" rx="5" ry="3" fill="rgba(255,255,255,0.1)" />
+        <ellipse cx="165" cy="258" rx="10" ry="13" fill="url(#armGradR)" />
+
+        {/* PELVIS */}
+        <path d="M60,192 Q54,216 56,234 L144,234 Q146,216 140,192 Z" fill="url(#torsoGrad)" />
+        <path d="M60,192 Q66,204 100,208 Q134,204 140,192" stroke="rgba(0,0,0,0.15)" strokeWidth="1" fill="none" />
+        {isFemale && (
           <>
-            <ellipse cx="86" cy="108" rx="14" ry="12" fill="#d8906a" opacity="0.7" />
-            <ellipse cx="114" cy="108" rx="14" ry="12" fill="#d8906a" opacity="0.7" />
+            <ellipse cx="62" cy="216" rx="14" ry="20" fill="rgba(200,140,100,0.35)" />
+            <ellipse cx="138" cy="216" rx="14" ry="20" fill="rgba(200,140,100,0.35)" />
           </>
         )}
 
-        {/* Shoulders */}
-        <ellipse cx="57" cy="94" rx="15" ry="11"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
-        <ellipse cx="143" cy="94" rx="15" ry="11"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
+        {/* THIGHS */}
+        <path d="M60,232 Q53,264 53,306 Q53,342 55,360 Q61,365 70,363 Q78,361 80,358 Q83,340 83,306 Q83,264 80,232 Z" fill="url(#legGradL)" />
+        <path d="M62,250 Q60,300 62,350" stroke="rgba(255,255,255,0.1)" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M140,232 Q147,264 147,306 Q147,342 145,360 Q139,365 130,363 Q122,361 120,358 Q117,340 117,306 Q117,264 120,232 Z" fill="url(#legGradR)" />
 
-        {/* Left Upper Arm */}
-        <path d="M44,91 Q34,112 30,145 Q28,163 32,178 Q37,180 41,178 Q45,163 47,145 Q51,114 57,97 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
-        {/* Right Upper Arm */}
-        <path d="M156,91 Q166,112 170,145 Q172,163 168,178 Q163,180 159,178 Q155,163 153,145 Q149,114 143,97 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
+        {/* KNEES */}
+        <ellipse cx="70" cy="364" rx="14" ry="12" fill="url(#legGradL)" />
+        <ellipse cx="66" cy="360" rx="6" ry="4" fill="rgba(255,255,255,0.12)" />
+        <ellipse cx="130" cy="364" rx="14" ry="12" fill="url(#legGradR)" />
 
-        {/* Left Forearm */}
-        <path d="M31,178 Q27,200 27,224 Q27,240 31,248 Q35,250 39,248 Q43,240 43,224 Q43,200 40,178 Z"
-          fill={gender === 'female' ? '#d09070' : '#b87848'} stroke="#7a5030" strokeWidth="0.7" />
-        {/* Right Forearm */}
-        <path d="M169,178 Q173,200 173,224 Q173,240 169,248 Q165,250 161,248 Q157,240 157,224 Q157,200 160,178 Z"
-          fill={gender === 'female' ? '#d09070' : '#b87848'} stroke="#7a5030" strokeWidth="0.7" />
+        {/* SHINS */}
+        <path d="M57,375 Q53,410 53,446 Q53,464 57,472 Q63,475 70,473 Q75,471 76,468 Q78,460 78,446 Q78,410 76,375 Z" fill="url(#legGradL)" />
+        <path d="M143,375 Q147,410 147,446 Q147,464 143,472 Q137,475 130,473 Q125,471 124,468 Q122,460 122,446 Q122,410 124,375 Z" fill="url(#legGradR)" />
 
-        {/* Hands */}
-        <ellipse cx="35" cy="254" rx="9" ry="11" fill={gender === 'female' ? '#d8a080' : '#c09060'} stroke="#7a5030" strokeWidth="0.6" />
-        <ellipse cx="165" cy="254" rx="9" ry="11" fill={gender === 'female' ? '#d8a080' : '#c09060'} stroke="#7a5030" strokeWidth="0.6" />
-
-        {/* Pelvis */}
-        <path d="M63,190 Q58,212 60,232 L140,232 Q142,212 137,190 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.8" />
-
-        {/* Female wider hips */}
-        {gender === 'female' && (
-          <>
-            <ellipse cx="66" cy="215" rx="12" ry="18" fill="#c88060" opacity="0.5" />
-            <ellipse cx="134" cy="215" rx="12" ry="18" fill="#c88060" opacity="0.5" />
-          </>
-        )}
-
-        {/* Thighs */}
-        <path d="M63,230 Q57,260 57,300 Q57,338 59,358 Q64,362 72,360 Q79,358 81,355 Q83,335 83,300 Q83,260 81,230 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
-        <path d="M137,230 Q143,260 143,300 Q143,338 141,358 Q136,362 128,360 Q121,358 119,355 Q117,335 117,300 Q117,260 119,230 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
-
-        {/* Knees */}
-        <ellipse cx="70" cy="363" rx="13" ry="11" fill={gender === 'female' ? '#d09070' : '#b87848'} stroke="#7a5030" strokeWidth="0.6" />
-        <ellipse cx="130" cy="363" rx="13" ry="11" fill={gender === 'female' ? '#d09070' : '#b87848'} stroke="#7a5030" strokeWidth="0.6" />
-
-        {/* Shins */}
-        <path d="M59,372 Q56,405 56,440 Q56,458 60,468 Q65,470 71,468 Q75,458 75,440 Q75,405 73,372 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
-        <path d="M141,372 Q144,405 144,440 Q144,458 140,468 Q135,470 129,468 Q125,458 125,440 Q125,405 127,372 Z"
-          fill={gender === 'female' ? '#c88060' : '#b07040'} stroke="#7a5030" strokeWidth="0.7" />
-
-        {/* Feet */}
-        <ellipse cx="65" cy="476" rx="13" ry="8" fill={gender === 'female' ? '#d09070' : '#b87848'} stroke="#7a5030" strokeWidth="0.6" />
-        <ellipse cx="135" cy="476" rx="13" ry="8" fill={gender === 'female' ? '#d09070' : '#b87848'} stroke="#7a5030" strokeWidth="0.6" />
+        {/* FEET */}
+        <path d="M55,472 Q50,476 48,480 Q48,486 54,488 Q62,490 70,488 Q76,486 78,482 Q78,476 74,473 Z" fill="url(#legGradL)" />
+        <path d="M145,472 Q150,476 152,480 Q152,486 146,488 Q138,490 130,488 Q124,486 122,482 Q122,476 126,473 Z" fill="url(#legGradR)" />
       </g>
 
-      {/* ========== SKELETON ========== */}
-      {showLayer('skeleton') && (
-        <g id="skeleton" opacity="0.9">
-          {/* Skull outline */}
-          <ellipse cx="100" cy="35" rx="20" ry="24" fill="none" stroke="#e8d5b0" strokeWidth="1.5" />
-          <ellipse cx="100" cy="52" rx="14" ry="8" fill="none" stroke="#e8d5b0" strokeWidth="1" />
-          {/* Spine */}
-          {[72, 83, 93, 103, 113, 123, 133, 143, 153, 163, 173, 183].map((y, i) => (
-            <rect key={i} x="97" y={y} width="6" height="6" rx="1" fill="#e8d5b0" opacity="0.8" />
+      {/* SKELETON */}
+      {show('skeleton') && (
+        <g opacity="0.92" filter="url(#innerGlow)">
+          <ellipse cx="100" cy="34" rx="21" ry="25" fill="none" stroke="url(#boneGrad)" strokeWidth="1.8" />
+          <path d="M86,55 L88,62 M114,55 L112,62" stroke="#d4c090" strokeWidth="1.2" />
+          <path d="M88,62 Q100,67 112,62" fill="none" stroke="#d4c090" strokeWidth="1.2" />
+          {[72,82,92,102,112,122,132,142,152,162,172,182].map((y, i) => (
+            <g key={i}>
+              <rect x="97" y={y} width="6" height="7" rx="1.5" fill="url(#boneGrad)" />
+              {i > 0 && <line x1="100" y1={y} x2="100" y2={y-3} stroke="#c8b080" strokeWidth="1" />}
+            </g>
           ))}
-          {/* Clavicle */}
-          <path d="M78,76 Q89,80 100,79 Q111,80 122,76" fill="none" stroke="#e8d5b0" strokeWidth="2" strokeLinecap="round" />
-          {/* Rib cage */}
-          {[0, 1, 2, 3, 4, 5].map((i) => (
-            <ellipse key={i} cx="100" cy={108 + i * 10} rx={30 - i * 1.5} ry="6"
-              fill="none" stroke="#e8d5b0" strokeWidth="1.2" opacity={0.7 - i * 0.08} />
+          <path d="M78,76 Q89,80 100,79" fill="none" stroke="url(#boneGrad)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M100,79 Q111,80 122,76" fill="none" stroke="url(#boneGrad)" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M100,82 L100,160" stroke="url(#boneGrad)" strokeWidth="3" strokeLinecap="round" />
+          {[0,1,2,3,4,5,6].map(i => (
+            <g key={i}>
+              <path d={`M100,${88+i*10} Q${78-i},${90+i*10} ${68-i},${96+i*10}`} fill="none" stroke="#d4c090" strokeWidth={1.4-i*0.06} opacity={0.82-i*0.07} />
+              <path d={`M100,${88+i*10} Q${122+i},${90+i*10} ${132+i},${96+i*10}`} fill="none" stroke="#d4c090" strokeWidth={1.4-i*0.06} opacity={0.82-i*0.07} />
+            </g>
           ))}
-          {/* Sternum */}
-          <line x1="100" y1="84" x2="100" y2="158" stroke="#e8d5b0" strokeWidth="2" />
-          {/* Pelvis */}
-          <path d="M70,200 Q66,218 68,228 Q84,234 100,234 Q116,234 132,228 Q134,218 130,200" fill="none" stroke="#e8d5b0" strokeWidth="1.5" />
-          <path d="M70,200 Q78,210 100,212 Q122,210 130,200" fill="none" stroke="#e8d5b0" strokeWidth="1" opacity="0.6" />
-          {/* Humerus L/R */}
-          <line x1="49" y1="95" x2="38" y2="174" stroke="#e8d5b0" strokeWidth="2" strokeLinecap="round" />
-          <line x1="151" y1="95" x2="162" y2="174" stroke="#e8d5b0" strokeWidth="2" strokeLinecap="round" />
-          {/* Radius/Ulna L */}
-          <line x1="36" y1="178" x2="32" y2="248" stroke="#e8d5b0" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="40" y1="178" x2="38" y2="248" stroke="#e8d5b0" strokeWidth="1" strokeLinecap="round" opacity="0.7" />
-          {/* Radius/Ulna R */}
-          <line x1="164" y1="178" x2="168" y2="248" stroke="#e8d5b0" strokeWidth="1.5" strokeLinecap="round" />
-          <line x1="160" y1="178" x2="162" y2="248" stroke="#e8d5b0" strokeWidth="1" strokeLinecap="round" opacity="0.7" />
-          {/* Femur L/R */}
-          <line x1="76" y1="232" x2="70" y2="358" stroke="#e8d5b0" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="124" y1="232" x2="130" y2="358" stroke="#e8d5b0" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Patella L/R */}
-          <circle cx="70" cy="364" r="5" fill="none" stroke="#e8d5b0" strokeWidth="1.5" />
-          <circle cx="130" cy="364" r="5" fill="none" stroke="#e8d5b0" strokeWidth="1.5" />
-          {/* Tibia L */}
-          <line x1="68" y1="374" x2="64" y2="468" stroke="#e8d5b0" strokeWidth="2" strokeLinecap="round" />
-          <line x1="73" y1="374" x2="70" y2="468" stroke="#e8d5b0" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
-          {/* Tibia R */}
-          <line x1="132" y1="374" x2="136" y2="468" stroke="#e8d5b0" strokeWidth="2" strokeLinecap="round" />
-          <line x1="127" y1="374" x2="130" y2="468" stroke="#e8d5b0" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
-          {/* Bone labels */}
-          <text x="126" y="37" fill="#e8d5b0" fontSize="5" fontFamily="monospace">גולגולת</text>
-          <text x="126" y="80" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">כלביקולה</text>
-          <text x="126" y="125" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">בית חזה</text>
-          <text x="20" y="155" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">הומרוס</text>
-          <text x="16" y="218" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">רדיוס/אולנה</text>
-          <text x="126" y="210" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">אגן</text>
-          <text x="50" y="295" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">פמור</text>
-          <text x="50" y="420" fill="#e8d5b0" fontSize="4.5" fontFamily="monospace">טיביה</text>
-        </g>
-      )}
-
-      {/* ========== MUSCLES ========== */}
-      {showLayer('muscles') && (
-        <g id="muscles" opacity="0.85">
-          {/* Pectorals */}
-          <path d="M70,88 Q85,102 100,104 Q115,102 130,88 Q118,80 100,82 Q82,80 70,88 Z"
-            fill="#ff7744" opacity="0.7" />
-          {/* Deltoids */}
-          <ellipse cx="57" cy="95" rx="13" ry="10" fill="#ff6633" opacity="0.7" />
-          <ellipse cx="143" cy="95" rx="13" ry="10" fill="#ff6633" opacity="0.7" />
-          {/* Biceps */}
-          <path d="M38,105 Q30,128 33,155" fill="none" stroke="#ff8855" strokeWidth="9" strokeLinecap="round" opacity="0.6" />
-          <path d="M162,105 Q170,128 167,155" fill="none" stroke="#ff8855" strokeWidth="9" strokeLinecap="round" opacity="0.6" />
-          {/* Abs */}
-          {[[88,108],[102,108],[88,122],[102,122],[88,136],[102,136]].map(([x,y],i) => (
-            <rect key={i} x={x} y={y} width="10" height="10" rx="3" fill="#ff9966" opacity="0.65" />
+          <path d="M68,202 Q62,220 64,232 Q82,238 100,238 Q118,238 136,232 Q138,220 132,202" fill="none" stroke="url(#boneGrad)" strokeWidth="1.8" />
+          <ellipse cx="84" cy="216" rx="8" ry="10" fill="none" stroke="#d4c090" strokeWidth="1" opacity="0.6" />
+          <ellipse cx="116" cy="216" rx="8" ry="10" fill="none" stroke="#d4c090" strokeWidth="1" opacity="0.6" />
+          <line x1="47" y1="94" x2="35" y2="177" stroke="url(#boneGrad)" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="153" y1="94" x2="165" y2="177" stroke="url(#boneGrad)" strokeWidth="2.5" strokeLinecap="round" />
+          <ellipse cx="35" cy="178" rx="5" ry="4" fill="#e8d8b0" />
+          <ellipse cx="165" cy="178" rx="5" ry="4" fill="#e8d8b0" />
+          <line x1="33" y1="182" x2="29" y2="252" stroke="url(#boneGrad)" strokeWidth="1.8" strokeLinecap="round" />
+          <line x1="38" y1="182" x2="36" y2="252" stroke="#c8b080" strokeWidth="1.1" strokeLinecap="round" opacity="0.7" />
+          <line x1="167" y1="182" x2="171" y2="252" stroke="url(#boneGrad)" strokeWidth="1.8" strokeLinecap="round" />
+          <line x1="162" y1="182" x2="164" y2="252" stroke="#c8b080" strokeWidth="1.1" strokeLinecap="round" opacity="0.7" />
+          <line x1="74" y1="234" x2="68" y2="360" stroke="url(#boneGrad)" strokeWidth="3" strokeLinecap="round" />
+          <line x1="126" y1="234" x2="132" y2="360" stroke="url(#boneGrad)" strokeWidth="3" strokeLinecap="round" />
+          <ellipse cx="68" cy="361" rx="7" ry="6" fill="#e8d8b0" />
+          <ellipse cx="132" cy="361" rx="7" ry="6" fill="#e8d8b0" />
+          <ellipse cx="68" cy="366" rx="5" ry="5" fill="none" stroke="#e8d8b0" strokeWidth="1.5" />
+          <ellipse cx="132" cy="366" rx="5" ry="5" fill="none" stroke="#e8d8b0" strokeWidth="1.5" />
+          <line x1="66" y1="376" x2="62" y2="470" stroke="url(#boneGrad)" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="72" y1="376" x2="70" y2="470" stroke="#c8b080" strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+          <line x1="134" y1="376" x2="138" y2="470" stroke="url(#boneGrad)" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="128" y1="376" x2="130" y2="470" stroke="#c8b080" strokeWidth="1.2" strokeLinecap="round" opacity="0.65" />
+          {[[126,36,'גולגולת'],[126,82,'כלביקולה'],[126,124,'בית חזה'],[16,150,'הומרוס'],[12,215,'רדיוס/אולנה'],[126,218,'אגן'],[46,298,'פמור'],[46,370,'פטלה'],[46,425,'טיביה']].map(([x,y,t],i) => (
+            <text key={i} x={x} y={y} fill="#e8d8b0" fontSize="4.5" fontFamily="sans-serif" opacity="0.85">{t}</text>
           ))}
-          {/* Obliques */}
-          <path d="M68,105 Q63,130 65,155 Q70,165 76,168" fill="none" stroke="#ff8844" strokeWidth="5" strokeLinecap="round" opacity="0.5" />
-          <path d="M132,105 Q137,130 135,155 Q130,165 124,168" fill="none" stroke="#ff8844" strokeWidth="5" strokeLinecap="round" opacity="0.5" />
-          {/* Quads */}
-          <path d="M65,235 Q59,275 59,315 Q59,340 63,358 Q70,362 78,358 Q82,335 82,315 Q82,275 79,235 Z"
-            fill="#ff8855" opacity="0.6" />
-          <path d="M135,235 Q141,275 141,315 Q141,340 137,358 Q130,362 122,358 Q118,335 118,315 Q118,275 121,235 Z"
-            fill="#ff8855" opacity="0.6" />
-          {/* Calves */}
-          <ellipse cx="65" cy="415" rx="9" ry="26" fill="#ff7744" opacity="0.6" />
-          <ellipse cx="135" cy="415" rx="9" ry="26" fill="#ff7744" opacity="0.6" />
-          {/* Forearms */}
-          <path d="M33,182 Q29,212 30,240" fill="none" stroke="#ff9966" strokeWidth="7" strokeLinecap="round" opacity="0.5" />
-          <path d="M167,182 Q171,212 170,240" fill="none" stroke="#ff9966" strokeWidth="7" strokeLinecap="round" opacity="0.5" />
-          {/* Labels */}
-          <text x="100" y="96" fill="#ffcc99" fontSize="5" textAnchor="middle" fontFamily="sans-serif">שריר חזה (Pectoralis)</text>
-          <text x="57" y="91" fill="#ffcc99" fontSize="4" textAnchor="middle" fontFamily="sans-serif">דלטואיד</text>
-          <text x="96" y="122" fill="#ffcc99" fontSize="4" textAnchor="middle" fontFamily="sans-serif">שרירי בטן</text>
-          <text x="24" y="130" fill="#ffcc99" fontSize="4" textAnchor="end" fontFamily="sans-serif">ביצפס</text>
-          <text x="60" y="298" fill="#ffcc99" fontSize="4.5" textAnchor="middle" fontFamily="sans-serif">קואדריצפס</text>
-          <text x="60" y="415" fill="#ffcc99" fontSize="4.5" textAnchor="middle" fontFamily="sans-serif">שוק</text>
         </g>
       )}
 
-      {/* ========== ARTERIES ========== */}
-      {showLayer('arteries') && (
-        <g id="arteries" filter="url(#softglow)">
-          {/* Carotid */}
-          <line x1="94" y1="63" x2="92" y2="80" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
-          <line x1="106" y1="63" x2="108" y2="80" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
-          {/* Aortic arch */}
-          <path d="M100,87 Q96,100 98,110 Q100,130 100,192" stroke="#dc2626" strokeWidth="3" fill="none" strokeLinecap="round" />
-          {/* Subclavian L */}
-          <path d="M98,90 Q86,87 72,94 Q58,103 46,118" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" />
-          {/* Subclavian R */}
-          <path d="M102,90 Q114,87 128,94 Q142,103 154,118" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" />
-          {/* Brachial L */}
-          <line x1="42" y1="120" x2="36" y2="174" stroke="#f87171" strokeWidth="1.8" strokeLinecap="round" />
-          {/* Brachial R */}
-          <line x1="158" y1="120" x2="164" y2="174" stroke="#f87171" strokeWidth="1.8" strokeLinecap="round" />
-          {/* Radial/Ulnar L */}
-          <line x1="34" y1="178" x2="31" y2="246" stroke="#fca5a5" strokeWidth="1.3" />
-          <line x1="38" y1="178" x2="36" y2="246" stroke="#f87171" strokeWidth="1" />
-          {/* Radial/Ulnar R */}
-          <line x1="166" y1="178" x2="169" y2="246" stroke="#fca5a5" strokeWidth="1.3" />
-          <line x1="162" y1="178" x2="164" y2="246" stroke="#f87171" strokeWidth="1" />
-          {/* Iliac L/R */}
-          <path d="M99,193 Q88,208 78,230" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M101,193 Q112,208 122,230" stroke="#ef4444" strokeWidth="2" fill="none" strokeLinecap="round" />
-          {/* Femoral L/R */}
-          <line x1="76" y1="232" x2="72" y2="354" stroke="#f87171" strokeWidth="2" />
-          <line x1="124" y1="232" x2="128" y2="354" stroke="#f87171" strokeWidth="2" />
-          {/* Popliteal */}
-          <line x1="71" y1="357" x2="69" y2="374" stroke="#fca5a5" strokeWidth="1.8" />
-          <line x1="129" y1="357" x2="131" y2="374" stroke="#fca5a5" strokeWidth="1.8" />
-          {/* Tibial */}
-          <line x1="67" y1="378" x2="64" y2="464" stroke="#fca5a5" strokeWidth="1.5" />
-          <line x1="133" y1="378" x2="136" y2="464" stroke="#fca5a5" strokeWidth="1.5" />
-          {/* Labels */}
-          <text x="112" y="68" fill="#fca5a5" fontSize="4.5" fontFamily="sans-serif">קרוטיד</text>
-          <text x="106" y="128" fill="#fca5a5" fontSize="4.5" fontFamily="sans-serif">אאורטה</text>
-          <text x="22" y="148" fill="#fca5a5" fontSize="4" fontFamily="sans-serif">ברכיאלי</text>
-          <text x="12" y="216" fill="#fca5a5" fontSize="4" fontFamily="sans-serif">רדיאלי/אולנרי</text>
-          <text x="83" y="292" fill="#fca5a5" fontSize="4.5" fontFamily="sans-serif">פמורלי</text>
-          <text x="50" y="438" fill="#fca5a5" fontSize="4.5" fontFamily="sans-serif">טיביאלי</text>
+      {/* MUSCLES */}
+      {show('muscles') && (
+        <g opacity="0.88">
+          <path d="M100,70 Q78,78 66,90 Q78,84 100,83 Q122,84 134,90 Q122,78 100,70 Z" fill="url(#muscleRed)" opacity="0.75" />
+          <path d="M68,86 Q83,102 100,104 Q117,102 132,86 Q120,78 100,80 Q80,78 68,86 Z" fill="url(#muscleDark)" opacity="0.72" />
+          <ellipse cx="54" cy="93" rx="14" ry="11" fill="url(#muscleRed)" opacity="0.72" />
+          <ellipse cx="146" cy="93" rx="14" ry="11" fill="url(#muscleRed)" opacity="0.72" />
+          <path d="M36,106 Q27,132 30,158" fill="none" stroke="url(#muscleRed)" strokeWidth="11" strokeLinecap="round" opacity="0.65" />
+          <path d="M164,106 Q173,132 170,158" fill="none" stroke="url(#muscleRed)" strokeWidth="11" strokeLinecap="round" opacity="0.65" />
+          {[[87,108],[101,108],[87,122],[101,122],[87,136],[101,136]].map(([x,y],i) => (
+            <rect key={i} x={x} y={y} width="11" height="11" rx="3" fill="url(#muscleDark)" opacity="0.68" />
+          ))}
+          <path d="M66,104 Q60,132 62,158" fill="none" stroke="#ff8844" strokeWidth="6" strokeLinecap="round" opacity="0.5" />
+          <path d="M134,104 Q140,132 138,158" fill="none" stroke="#ff8844" strokeWidth="6" strokeLinecap="round" opacity="0.5" />
+          <path d="M31,184 Q26,214 28,244" fill="none" stroke="url(#muscleRed)" strokeWidth="8" strokeLinecap="round" opacity="0.58" />
+          <path d="M169,184 Q174,214 172,244" fill="none" stroke="url(#muscleRed)" strokeWidth="8" strokeLinecap="round" opacity="0.58" />
+          <path d="M62,236 Q56,276 56,318 Q56,342 60,360 Q68,364 76,360 Q82,338 82,318 Q82,276 79,236 Z" fill="url(#muscleRed)" opacity="0.65" />
+          <path d="M138,236 Q144,276 144,318 Q144,342 140,360 Q132,364 124,360 Q118,338 118,318 Q118,276 121,236 Z" fill="url(#muscleRed)" opacity="0.65" />
+          <ellipse cx="65" cy="416" rx="10" ry="28" fill="url(#muscleDark)" opacity="0.65" />
+          <ellipse cx="135" cy="416" rx="10" ry="28" fill="url(#muscleDark)" opacity="0.65" />
+          {[[100,96,'שריר חזה','middle'],[57,89,'דלטואיד','middle'],[97,124,'Abs','middle'],[22,134,'ביצפס',null],[62,300,'קואדריצפס','middle'],[64,418,'שוק','middle'],[100,81,'טרפזיוס','middle']].map(([x,y,t,anchor],i) => (
+            <text key={i} x={x} y={y} fill="#ffcc99" fontSize="5" fontFamily="sans-serif" textAnchor={anchor||'start'} opacity="0.9">{t}</text>
+          ))}
         </g>
       )}
 
-      {/* ========== VEINS ========== */}
-      {showLayer('veins') && (
-        <g id="veins" filter="url(#softglow)">
-          {/* Jugular */}
-          <line x1="91" y1="62" x2="89" y2="80" stroke="#6b9fff" strokeWidth="2" strokeDasharray="3,1.5" strokeLinecap="round" />
-          <line x1="109" y1="62" x2="111" y2="80" stroke="#6b9fff" strokeWidth="2" strokeDasharray="3,1.5" strokeLinecap="round" />
-          {/* Superior vena cava */}
-          <line x1="99" y1="85" x2="99" y2="118" stroke="#3b82f6" strokeWidth="2.5" strokeDasharray="4,2" />
-          {/* Inferior vena cava */}
-          <line x1="101" y1="120" x2="101" y2="192" stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,2" />
-          {/* Cephalic L */}
-          <path d="M43,115 Q40,143 37,174" stroke="#6b9fff" strokeWidth="1.5" fill="none" strokeDasharray="3,1.5" />
-          {/* Cephalic R */}
-          <path d="M157,115 Q160,143 163,174" stroke="#6b9fff" strokeWidth="1.5" fill="none" strokeDasharray="3,1.5" />
-          {/* Basilic L */}
-          <path d="M47,115 Q45,140 44,174" stroke="#93c5fd" strokeWidth="1.2" fill="none" strokeDasharray="2,1.5" />
-          {/* Basilic R */}
-          <path d="M153,115 Q155,140 156,174" stroke="#93c5fd" strokeWidth="1.2" fill="none" strokeDasharray="2,1.5" />
-          {/* Great Saphenous L/R */}
-          <line x1="75" y1="235" x2="73" y2="464" stroke="#6b9fff" strokeWidth="1.5" strokeDasharray="3,1.5" />
-          <line x1="125" y1="235" x2="127" y2="464" stroke="#6b9fff" strokeWidth="1.5" strokeDasharray="3,1.5" />
-          {/* Femoral vein */}
-          <line x1="79" y1="235" x2="77" y2="354" stroke="#3b82f6" strokeWidth="1.8" strokeDasharray="3,1.5" />
-          <line x1="121" y1="235" x2="123" y2="354" stroke="#3b82f6" strokeWidth="1.8" strokeDasharray="3,1.5" />
-          {/* Labels */}
-          <text x="114" y="72" fill="#93c5fd" fontSize="4.5" fontFamily="sans-serif">ג׳וגולר</text>
-          <text x="105" y="98" fill="#93c5fd" fontSize="4.5" fontFamily="sans-serif">ורידי קבה</text>
-          <text x="16" y="150" fill="#93c5fd" fontSize="4" fontFamily="sans-serif">צפלי</text>
-          <text x="82" y="350" fill="#93c5fd" fontSize="4.5" fontFamily="sans-serif">סאפנוס</text>
-          <text x="82" y="300" fill="#93c5fd" fontSize="4.5" fontFamily="sans-serif">פמורלי</text>
+      {/* ARTERIES */}
+      {show('arteries') && (
+        <g filter="url(#glow)">
+          <line x1="93" y1="62" x2="91" y2="80" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" />
+          <line x1="107" y1="62" x2="109" y2="80" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" />
+          <path d="M100,86 Q96,106 98,118 Q100,136 100,194" fill="none" stroke="#dc2626" strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M98,90 Q84,86 70,94 Q56,104 44,120" fill="none" stroke="#ef4444" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M102,90 Q116,86 130,94 Q144,104 156,120" fill="none" stroke="#ef4444" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="40" y1="122" x2="33" y2="176" stroke="#f87171" strokeWidth="2" strokeLinecap="round" />
+          <line x1="160" y1="122" x2="167" y2="176" stroke="#f87171" strokeWidth="2" strokeLinecap="round" />
+          <line x1="31" y1="180" x2="27" y2="252" stroke="#fca5a5" strokeWidth="1.5" />
+          <line x1="36" y1="180" x2="34" y2="252" stroke="#f87171" strokeWidth="1.1" />
+          <line x1="169" y1="180" x2="173" y2="252" stroke="#fca5a5" strokeWidth="1.5" />
+          <line x1="164" y1="180" x2="166" y2="252" stroke="#f87171" strokeWidth="1.1" />
+          <path d="M99,196 Q86,212 76,234" fill="none" stroke="#ef4444" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M101,196 Q114,212 124,234" fill="none" stroke="#ef4444" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="74" y1="236" x2="70" y2="358" stroke="#f87171" strokeWidth="2.2" />
+          <line x1="126" y1="236" x2="130" y2="358" stroke="#f87171" strokeWidth="2.2" />
+          <line x1="65" y1="380" x2="62" y2="468" stroke="#fca5a5" strokeWidth="1.6" />
+          <line x1="135" y1="380" x2="138" y2="468" stroke="#fca5a5" strokeWidth="1.6" />
+          {[[115,68,'קרוטיד'],[107,132,'אאורטה'],[16,150,'ברכיאלי'],[10,216,'רדיאלי/אולנרי'],[82,300,'פמורלי'],[46,444,'טיביאלי']].map(([x,y,t],i) => (
+            <text key={i} x={x} y={y} fill="#fca5a5" fontSize="4.5" fontFamily="sans-serif">{t}</text>
+          ))}
         </g>
       )}
 
-      {/* ========== NERVES ========== */}
-      {showLayer('nerves') && (
-        <g id="nerves" filter="url(#softglow)">
-          {/* Spinal cord */}
-          <path d="M99.5,68 L99.5,190" stroke="#d9f99d" strokeWidth="1.8" strokeDasharray="3,1.5" />
-          {/* Brachial plexus L */}
-          <path d="M92,74 Q80,80 70,90 Q56,102 46,118" stroke="#a3e635" strokeWidth="1.3" fill="none" strokeDasharray="4,2" />
-          {/* Brachial plexus R */}
-          <path d="M108,74 Q120,80 130,90 Q144,102 154,118" stroke="#a3e635" strokeWidth="1.3" fill="none" strokeDasharray="4,2" />
-          {/* Radial nerve L */}
-          <path d="M46,120 Q38,145 34,180" stroke="#bef264" strokeWidth="1" fill="none" strokeDasharray="3,2" />
-          {/* Median/Ulnar L */}
-          <path d="M40,176 Q37,208 36,246" stroke="#a3e635" strokeWidth="0.9" fill="none" strokeDasharray="2,1.5" />
-          <path d="M43,176 Q41,208 39,246" stroke="#d9f99d" strokeWidth="0.8" fill="none" strokeDasharray="2,1" />
-          {/* Radial nerve R */}
-          <path d="M154,120 Q162,145 166,180" stroke="#bef264" strokeWidth="1" fill="none" strokeDasharray="3,2" />
-          {/* Sciatic L/R */}
-          <line x1="84" y1="234" x2="78" y2="358" stroke="#a3e635" strokeWidth="1.5" strokeDasharray="4,2" />
-          <line x1="116" y1="234" x2="122" y2="358" stroke="#a3e635" strokeWidth="1.5" strokeDasharray="4,2" />
-          {/* Peroneal/Tibial L */}
-          <line x1="76" y1="362" x2="70" y2="464" stroke="#bef264" strokeWidth="1.2" strokeDasharray="3,2" />
-          <line x1="79" y1="362" x2="74" y2="464" stroke="#d9f99d" strokeWidth="0.9" strokeDasharray="2,1.5" />
-          {/* Peroneal/Tibial R */}
-          <line x1="124" y1="362" x2="130" y2="464" stroke="#bef264" strokeWidth="1.2" strokeDasharray="3,2" />
-          <line x1="121" y1="362" x2="126" y2="464" stroke="#d9f99d" strokeWidth="0.9" strokeDasharray="2,1.5" />
-          {/* Labels */}
-          <text x="46" y="78" fill="#d9f99d" fontSize="4.5" fontFamily="sans-serif">פלקסוס ברכיאלי</text>
-          <text x="104" y="100" fill="#d9f99d" fontSize="4" fontFamily="sans-serif">חוט שדרה</text>
-          <text x="17" y="132" fill="#d9f99d" fontSize="4" fontFamily="sans-serif">רדיאלי</text>
-          <text x="14" y="215" fill="#d9f99d" fontSize="4" fontFamily="sans-serif">אולנר/מדיאני</text>
-          <text x="58" y="296" fill="#d9f99d" fontSize="4.5" fontFamily="sans-serif">סיאטי</text>
-          <text x="50" y="430" fill="#d9f99d" fontSize="4.5" fontFamily="sans-serif">פרונאלי</text>
+      {/* VEINS */}
+      {show('veins') && (
+        <g>
+          <line x1="90" y1="61" x2="88" y2="80" stroke="#5b9eff" strokeWidth="2.2" strokeDasharray="3,1.5" strokeLinecap="round" />
+          <line x1="110" y1="61" x2="112" y2="80" stroke="#5b9eff" strokeWidth="2.2" strokeDasharray="3,1.5" strokeLinecap="round" />
+          <line x1="99" y1="84" x2="99" y2="120" stroke="#3b82f6" strokeWidth="3" strokeDasharray="4,2" />
+          <line x1="101" y1="122" x2="101" y2="194" stroke="#3b82f6" strokeWidth="2.2" strokeDasharray="3,2" />
+          <path d="M41,116 Q38,145 35,176" fill="none" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
+          <path d="M159,116 Q162,145 165,176" fill="none" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
+          <line x1="73" y1="237" x2="71" y2="468" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
+          <line x1="127" y1="237" x2="129" y2="468" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
+          <line x1="78" y1="237" x2="75" y2="357" stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,1.5" />
+          <line x1="122" y1="237" x2="125" y2="357" stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,1.5" />
+          {[[116,72,'ג׳וגולר'],[106,100,'ורידי קבה'],[15,152,'צפלי'],[79,300,'פמורלי'],[79,355,'סאפנוס']].map(([x,y,t],i) => (
+            <text key={i} x={x} y={y} fill="#93c5fd" fontSize="4.5" fontFamily="sans-serif">{t}</text>
+          ))}
         </g>
       )}
 
-      {/* ========== PRESSURE POINTS ========== */}
-      {showLayer('points') && allPoints.map(pt => {
-        const pointId = pt.pointId || pt.id;
-        const col = pointColors[pointId] || '#00d4ff';
-        const isSelected = selectedPoint === pointId;
+      {/* NERVES */}
+      {show('nerves') && (
+        <g>
+          <path d="M99.5,68 L99.5,194" fill="none" stroke="#ecfccb" strokeWidth="2" strokeDasharray="3,1.5" />
+          <path d="M92,74 Q78,80 68,90 Q54,104 44,120" fill="none" stroke="#9ee840" strokeWidth="1.4" strokeDasharray="4,2" />
+          <path d="M108,74 Q122,80 132,90 Q146,104 156,120" fill="none" stroke="#9ee840" strokeWidth="1.4" strokeDasharray="4,2" />
+          <path d="M44,122 Q36,148 32,182" fill="none" stroke="#bef264" strokeWidth="1.1" strokeDasharray="3,2" />
+          <line x1="82" y1="237" x2="76" y2="360" stroke="#9ee840" strokeWidth="1.6" strokeDasharray="4,2" />
+          <line x1="118" y1="237" x2="124" y2="360" stroke="#9ee840" strokeWidth="1.6" strokeDasharray="4,2" />
+          <line x1="74" y1="364" x2="68" y2="468" stroke="#bef264" strokeWidth="1.3" strokeDasharray="3,2" />
+          <line x1="126" y1="364" x2="132" y2="468" stroke="#bef264" strokeWidth="1.3" strokeDasharray="3,2" />
+          {[[46,78,'פלקסוס ברכיאלי'],[104,102,'חוט שדרה'],[15,135,'רדיאלי'],[55,300,'סיאטי'],[47,433,'פרונאלי']].map(([x,y,t],i) => (
+            <text key={i} x={x} y={y} fill="#d9f99d" fontSize="4.5" fontFamily="sans-serif">{t}</text>
+          ))}
+        </g>
+      )}
+
+      {/* PRESSURE POINTS */}
+      {show('points') && allPoints.map((pt, idx) => {
+        const col = POINT_COLORS[pt.id] || '#00d4ff';
+        const isSel = selectedPoint === pt.id;
+        const r = isSel ? 9 : 7;
         return (
-          <g
-            key={pt.id}
-            onClick={() => onPointClick(pointId)}
-            style={{ cursor: 'pointer' }}
-          >
-            {/* Pulse ring */}
-            <circle cx={pt.cx} cy={pt.cy} r={isSelected ? 14 : 11}
-              fill="none" stroke={col} strokeWidth="1" opacity="0.35">
-              <animate attributeName="r" values={`${isSelected ? 12 : 9};${isSelected ? 18 : 14};${isSelected ? 12 : 9}`}
-                dur="2s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite" />
+          <g key={idx} onClick={() => onPointClick(pt.id)} style={{ cursor: 'pointer' }}>
+            <circle cx={pt.cx} cy={pt.cy} r={r + 4} fill="none" stroke={col} strokeWidth="1" opacity="0.3">
+              <animate attributeName="r" values={`${r+2};${r+10};${r+2}`} dur="2.2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.4;0;0.4" dur="2.2s" repeatCount="indefinite" />
             </circle>
-            {/* Main dot */}
-            <circle cx={pt.cx} cy={pt.cy} r={isSelected ? 9 : 7}
-              fill={isSelected ? col : `${col}44`}
-              stroke={col} strokeWidth={isSelected ? 2 : 1.5} />
-            {/* Label */}
-            <text x={pt.cx} y={pt.cy + 3} fill={isSelected ? '#000' : col}
-              fontSize="4" textAnchor="middle" fontFamily="monospace" fontWeight="700">
-              {pt.label}
-            </text>
+            <circle cx={pt.cx} cy={pt.cy} r={r} fill={isSel ? col : `${col}35`} stroke={col} strokeWidth={isSel ? 2.5 : 1.8} />
+            <circle cx={pt.cx - r*0.3} cy={pt.cy - r*0.3} r={r*0.35} fill="rgba(255,255,255,0.4)" />
+            <text x={pt.cx} y={pt.cy + 3.5} fill={isSel ? '#000' : col} fontSize="3.8" textAnchor="middle" fontFamily="monospace" fontWeight="700" style={{ pointerEvents: 'none' }}>{pt.id}</text>
           </g>
         );
       })}

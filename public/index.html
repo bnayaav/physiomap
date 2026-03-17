@@ -3,23 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>PhysioMap 3D</title>
+
   <style>
     body {
       margin: 0;
       background: #000;
     }
-    iframe {
-      border: none;
-    }
   </style>
+
+  <!-- 🔥 SDK של BioDigital -->
+  <script src="https://developer.biodigital.com/builds/api/2/human-api.min.js"></script>
 </head>
 
 <body>
 
+<!-- 🧠 המודל -->
 <iframe id="bodyWidget"
   src="https://human.biodigital.com/widget/?id=production/maleAdult/male_region_anatomy&ui-anatomy-descriptions=true&ui-fullscreen=true&dk=8abed64a1cea795cb0b9fd2d7c65d3c00f19c748"
-  width="100%" height="100%">
+  width="100%" height="600px">
 </iframe>
+
+<!-- 🔥 הקוד שלך -->
+<script>
+  const human = new HumanAPI("bodyWidget");
+
+  human.on("ready", function() {
+    console.log("המודל נטען");
+
+    // הצג שרירים
+    human.send("scene.setLayer", {
+      layer: "Muscular System",
+      visible: true
+    });
+  });
+
+  human.pick.on("picked", function(e) {
+    console.log("לחצת על:", e.objectName);
+  });
+</script>
 
 </body>
 </html>

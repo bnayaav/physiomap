@@ -344,5 +344,280 @@ window.addEventListener('DOMContentLoaded',()=>{
   buildSceneBtns(); buildMlayers(); buildQpts(); loadBD();
 });
 </script>
-</body>
+
 </html>
+<!-- THIS IS A PLACEHOLDER - will be replaced with actual key -->
+
+<!-- ══════════════════════════════════════════
+     AI MEDICAL ASSISTANT PANEL
+══════════════════════════════════════════ -->
+<style>
+/* AI Panel */
+#aiPanel{position:fixed;bottom:0;right:0;width:100%;max-width:480px;
+  background:var(--panel);border-top:1px solid var(--b1);
+  border-right:none;border-radius:16px 16px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.5);
+  z-index:200;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+#aiPanel.open{transform:translateY(0)}
+@media(min-width:701px){
+  #aiPanel{right:260px;border-left:1px solid var(--b1);border-radius:16px 0 0 16px;
+    width:420px;max-width:420px;top:52px;bottom:0;transform:translateX(100%);
+    border-top:none}
+  #aiPanel.open{transform:translateX(0)}
+}
+#aiHandle{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid var(--b1);cursor:pointer;flex-shrink:0}
+.ai-title{font-size:.9rem;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:8px}
+.ai-badge{font-size:.62rem;background:rgba(0,207,232,.15);border:1px solid rgba(0,207,232,.3);
+  color:var(--accent);padding:2px 8px;border-radius:20px}
+#aiClose{background:transparent;border:none;color:var(--t3);font-size:1.2rem;cursor:pointer}
+#aiBody{display:flex;flex-direction:column;height:calc(100% - 52px);overflow:hidden}
+#aiMessages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:92%;padding:10px 13px;border-radius:10px;font-size:.82rem;line-height:1.6}
+.ai-msg.user{background:rgba(0,207,232,.12);border:1px solid rgba(0,207,232,.2);
+  color:var(--t1);align-self:flex-start;border-radius:10px 10px 3px 10px}
+.ai-msg.ai{background:#121e32;border:1px solid var(--b1);color:var(--t1);
+  align-self:flex-end;border-radius:10px 10px 10px 3px}
+.ai-msg.ai .src{font-size:.68rem;color:var(--t3);margin-top:6px;border-top:1px solid var(--b1);padding-top:5px}
+.ai-msg.ai .src a{color:var(--accent);text-decoration:none}
+.ai-typing{display:flex;gap:5px;padding:10px 13px;background:#121e32;border:1px solid var(--b1);
+  border-radius:10px;align-self:flex-end;width:fit-content}
+.ai-typing span{width:7px;height:7px;background:var(--accent);border-radius:50%;
+  animation:bounce .9s infinite}
+.ai-typing span:nth-child(2){animation-delay:.15s}
+.ai-typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+#aiInputArea{padding:12px;border-top:1px solid var(--b1);flex-shrink:0}
+#aiInputRow{display:flex;gap:8px;margin-bottom:8px}
+#aiInput{flex:1;background:#121e32;border:1px solid var(--b1);border-radius:8px;
+  color:var(--t1);font-size:.82rem;padding:9px 12px;outline:none;direction:rtl;
+  resize:none;font-family:system-ui;line-height:1.4;height:68px;transition:border .2s}
+#aiInput:focus{border-color:var(--accent)}
+#aiInput::placeholder{color:#2a4060;font-size:.78rem}
+#aiSend{width:42px;height:68px;background:var(--accent);border:none;border-radius:8px;
+  color:#000;font-size:1.2rem;cursor:pointer;flex-shrink:0;transition:all .2s;font-weight:700}
+#aiSend:hover{background:#00b8d4}
+#aiSend:disabled{background:#1a2e4a;color:var(--t3);cursor:not-allowed}
+.ai-chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:4px 10px;background:#121e32;border:1px solid var(--b1);border-radius:20px;
+  color:var(--t3);font-size:.7rem;cursor:pointer;transition:all .15s;white-space:nowrap}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+
+/* AI Toggle Button */
+#aiToggle{position:fixed;bottom:20px;right:20px;z-index:150;
+  width:52px;height:52px;background:linear-gradient(135deg,#00cfe8,#0099bb);
+  border:none;border-radius:50%;color:#000;font-size:1.4rem;cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,207,232,.5);transition:all .2s;display:flex;
+  align-items:center;justify-content:center}
+#aiToggle:hover{transform:scale(1.1)}
+#aiToggle .badge{position:absolute;top:-2px;right:-2px;width:16px;height:16px;
+  background:#f87171;border-radius:50%;border:2px solid var(--bg);
+  font-size:.55rem;color:#fff;display:flex;align-items:center;justify-content:center}
+@media(min-width:701px){#aiToggle{bottom:20px;right:280px}}
+</style>
+
+<!-- AI Toggle Button -->
+<button id="aiToggle" onclick="toggleAI()" title="עוזר AI רפואי">
+  🤖
+  <span class="badge" id="aiBadge" style="display:none">!</span>
+</button>
+
+<!-- AI Panel -->
+<div id="aiPanel">
+  <div id="aiHandle" onclick="toggleAI()">
+    <div class="ai-title">
+      🤖 עוזר AI רפואי
+      <span class="ai-badge">GPT-4 • מקורות רשמיים</span>
+    </div>
+    <button id="aiClose">✕</button>
+  </div>
+  <div id="aiBody">
+    <div id="aiMessages">
+      <div class="ai-msg ai">
+        שלום! אני עוזר AI רפואי לפיזיותרפיה.<br><br>
+        תאר לי את <strong>תסמיני המטופל</strong> ואני אספק כיווני טיפול מבוססי ראיות ממקורות רפואיים רשמיים.
+        <div class="src">⚠️ המלצות לצרכי עזר בלבד — לא תחליף לאבחון קליני</div>
+      </div>
+    </div>
+    <div id="aiInputArea">
+      <div id="aiInputRow">
+        <textarea id="aiInput" placeholder="תאר תסמינים: מיקום, עוצמה, משך, מה מחמיר/משפר...&#10;לדוגמה: כאב גב תחתון ימין, 7/10, מקרין לירך, גרוע בישיבה"></textarea>
+        <button id="aiSend" onclick="sendToAI()">➤</button>
+      </div>
+      <div class="ai-chips">
+        <span class="chip" onclick="quickAsk('כאב גב תחתון עם הקרנה לרגל')">כאב גב + הקרנה</span>
+        <span class="chip" onclick="quickAsk('כאב כתף עם הגבלת תנועה')">כאב כתף</span>
+        <span class="chip" onclick="quickAsk('כאב ברך בעלייה וירידת מדרגות')">כאב ברך</span>
+        <span class="chip" onclick="quickAsk('כאבי ראש ונוקשות צוואר')">כאב ראש + צוואר</span>
+        <span class="chip" onclick="quickAsk('כאב עקב בבוקר')">כאב עקב</span>
+        <span class="chip" onclick="quickAsk('כאב מרפק חיצוני בפיתול')">טניס אלבו</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+<script>
+// ══════════════════════════════════════════
+// AI MEDICAL ASSISTANT
+// ══════════════════════════════════════════
+const OPENAI_KEY = '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'; // ← החלף כאן
+
+const AI_SYSTEM = `You are a clinical physiotherapy AI assistant. 
+Answer ONLY based on evidence from official medical sources: PubMed, APTA Clinical Practice Guidelines, JOSPT, Cochrane Reviews, NICE Guidelines, and WHO.
+
+Rules:
+1. Always cite your sources (journal name, year, guideline name)
+2. Structure answers with: Assessment clues → Likely structures → Treatment approach → Red flags
+3. Respond in Hebrew
+4. Keep answers concise and clinically practical
+5. Always end with: "מקורות: [list sources]"
+6. Never diagnose — provide clinical reasoning directions only
+7. Suggest relevant trigger points when applicable`;
+
+let aiOpen = false;
+let isTyping = false;
+const chatHistory = [];
+
+function toggleAI(){
+  aiOpen = !aiOpen;
+  document.getElementById('aiPanel').classList.toggle('open', aiOpen);
+  document.getElementById('aiBadge').style.display = 'none';
+  if(aiOpen) document.getElementById('aiInput').focus();
+}
+
+function quickAsk(text){
+  document.getElementById('aiInput').value = text;
+  sendToAI();
+}
+
+async function sendToAI(){
+  const input = document.getElementById('aiInput');
+  const text = input.value.trim();
+  if(!text || isTyping) return;
+
+  // Add patient context if selected
+  let fullText = text;
+  const patName = document.getElementById('patInp').value;
+  if(patName) fullText = `מטופל: ${patName}\nתסמינים: ${text}`;
+
+  // Add selected trigger point context
+  if(S.selKey && TPS[S.selKey]){
+    const tp = TPS[S.selKey];
+    fullText += `\nנקודת טריגר נבחרה: ${tp.nameHe} — ${tp.location}`;
+  }
+
+  input.value = '';
+  addMessage(text, 'user');
+  chatHistory.push({role:'user', content: fullText});
+
+  showTyping();
+  isTyping = true;
+  document.getElementById('aiSend').disabled = true;
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          {role:'system', content: AI_SYSTEM},
+          ...chatHistory
+        ],
+        max_tokens: 800,
+        temperature: 0.3
+      })
+    });
+
+    const data = await response.json();
+    hideTyping();
+
+    if(data.choices && data.choices[0]){
+      const reply = data.choices[0].message.content;
+      chatHistory.push({role:'assistant', content: reply});
+      addAIMessage(reply);
+
+      // Flash badge if panel closed
+      if(!aiOpen){
+        document.getElementById('aiBadge').style.display = 'flex';
+      }
+    } else if(data.error){
+      addAIMessage(`שגיאה: ${data.error.message}`);
+    }
+  } catch(e){
+    hideTyping();
+    addAIMessage('שגיאת חיבור — בדוק את ה-API key וחיבור האינטרנט.');
+  }
+
+  isTyping = false;
+  document.getElementById('aiSend').disabled = false;
+}
+
+function addMessage(text, type){
+  const msgs = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = `ai-msg ${type}`;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addAIMessage(text){
+  const msgs = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ai';
+
+  // Extract sources from text
+  const srcMatch = text.match(/מקורות[:\s]+([\s\S]+)$/);
+  let mainText = text;
+  let sources = '';
+
+  if(srcMatch){
+    mainText = text.replace(srcMatch[0], '').trim();
+    sources = srcMatch[1].trim();
+  }
+
+  // Format text — bold **text**
+  mainText = mainText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  mainText = mainText.replace(/\n/g, '<br>');
+
+  div.innerHTML = mainText;
+
+  if(sources){
+    const srcDiv = document.createElement('div');
+    srcDiv.className = 'src';
+    srcDiv.innerHTML = '📚 מקורות: ' + sources;
+    div.appendChild(srcDiv);
+  }
+
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping(){
+  const msgs = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = 'ai-typing';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping(){
+  const t = document.getElementById('typingIndicator');
+  if(t) t.remove();
+}
+
+// Send on Ctrl+Enter
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('aiInput').addEventListener('keydown', e=>{
+    if(e.key === 'Enter' && e.ctrlKey){ e.preventDefault(); sendToAI(); }
+  });
+});
+</script>

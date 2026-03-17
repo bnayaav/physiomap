@@ -134,7 +134,7 @@ header{height:52px;background:var(--panel);border-bottom:1px solid var(--b1);dis
       <div class="olt">טוען BioDigital Human...</div>
       <div class="ols" id="lst">מודל אנטומי מקצועי</div>
     </div>
-    <iframe id="bdFrame" allowfullscreen allow="xr-spatial-tracking *" src="about:blank"></iframe>
+    <div id="framesContainer" style="width:100%;height:100%;position:relative"></div>
     <button id="mib" onclick="openDrw('info')" style="display:none">פרטי נקודה ↑</button>
   </div>
 
@@ -215,22 +215,92 @@ function getURL(gender, scene){
   return `https://human.biodigital.com/viewer/?id=${id}&${PARAMS}`;
 }
 
+// Preloaded frames cache
+const frameCache = {};
+
+function getFrameKey(gender, scene){ return gender+'_'+scene; }
+
+function preloadFrame(gender, scene){
+  const key = getFrameKey(gender, scene);
+  if(frameCache[key]) return frameCache[key];
+  const frame = document.createElement('iframe');
+  frame.allowFullscreen = true;
+  frame.allow = 'xr-spatial-tracking *';
+  frame.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;display:none';
+  frame.src = getURL(gender, scene);
+  document.getElementById('framesContainer').appendChild(frame);
+  frameCache[key] = frame;
+  return frame;
+}
+
 function loadBD(){
-  const ov=document.getElementById('ov');
+  const key = getFrameKey(S.gender, S.scene);
+  const ov = document.getElementById('ov');
+
+  // If already cached and loaded — instant switch
+  if(frameCache[key]){
+    // Hide all frames
+    Object.values(frameCache).forEach(f => f.style.display='none');
+    frameCache[key].style.display = 'block';
+    ov.classList.add('gone');
+    // Preload neighbors in background
+    preloadNeighbors();
+    return;
+  }
+
+  // Show loading
   ov.classList.remove('gone');
-  document.getElementById('lst').textContent='טוען מודל...';
+  document.getElementById('lst').textContent = 'טוען מודל...';
+
+  // Hide all
+  Object.values(frameCache).forEach(f => f.style.display='none');
+
+  // Create and show new frame
+  const frame = preloadFrame(S.gender, S.scene);
+  frame.style.display = 'block';
+
   if(S.timer) clearTimeout(S.timer);
-  const frame=document.getElementById('bdFrame');
-  frame.src='';
-  setTimeout(()=>{ frame.src=getURL(S.gender,S.scene); },150);
-  S.timer=setTimeout(()=>ov.classList.add('gone'),10000);
-  frame.onload=()=>{ clearTimeout(S.timer); setTimeout(()=>ov.classList.add('gone'),2500); };
+  S.timer = setTimeout(()=> ov.classList.add('gone'), 12000);
+
+  frame.onload = ()=>{
+    clearTimeout(S.timer);
+    setTimeout(()=>{
+      ov.classList.add('gone');
+      preloadNeighbors(); // preload others in background after main loaded
+    }, 2000);
+  };
+}
+
+function preloadNeighbors(){
+  // Silently preload other scenes in background
+  const scenes = Object.keys(SLABELS);
+  let i = 0;
+  function loadNext(){
+    if(i >= scenes.length) return;
+    const sc = scenes[i++];
+    const key = getFrameKey(S.gender, sc);
+    if(!frameCache[key]){
+      const f = preloadFrame(S.gender, sc);
+      f.style.display = 'none';
+      // Load next after 3 seconds delay to not compete with main frame
+      setTimeout(loadNext, 3000);
+    } else {
+      loadNext();
+    }
+  }
+  setTimeout(loadNext, 3000);
 }
 
 function setGender(g){
   S.gender=g;
   document.getElementById('gm').classList.toggle('on',g==='male');
   document.getElementById('gf').classList.toggle('on',g==='female');
+  // Clear cache for new gender
+  Object.keys(frameCache).forEach(k=>{
+    if(k.startsWith(g)){} else { 
+      const f=frameCache[k]; if(f){f.remove();delete frameCache[k];}
+    }
+  });
   loadBD();
 }
 
@@ -462,7 +532,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 // ══════════════════════════════════════════
 // AI MEDICAL ASSISTANT
 // ══════════════════════════════════════════
-const OPENAI_KEY = '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'; // ← החלף כאן
+const ANTHROPIC_KEY = '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'; // ← הכנס Claude API key מ-console.anthropic.com
 
 const AI_SYSTEM = `You are a clinical physiotherapy AI assistant. 
 Answer ONLY based on evidence from official medical sources: PubMed, APTA Clinical Practice Guidelines, JOSPT, Cochrane Reviews, NICE Guidelines, and WHO.
@@ -497,12 +567,9 @@ async function sendToAI(){
   const text = input.value.trim();
   if(!text || isTyping) return;
 
-  // Add patient context if selected
   let fullText = text;
   const patName = document.getElementById('patInp').value;
   if(patName) fullText = `מטופל: ${patName}\nתסמינים: ${text}`;
-
-  // Add selected trigger point context
   if(S.selKey && TPS[S.selKey]){
     const tp = TPS[S.selKey];
     fullText += `\nנקודת טריגר נבחרה: ${tp.nameHe} — ${tp.location}`;
@@ -511,47 +578,42 @@ async function sendToAI(){
   input.value = '';
   addMessage(text, 'user');
   chatHistory.push({role:'user', content: fullText});
-
   showTyping();
   isTyping = true;
   document.getElementById('aiSend').disabled = true;
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Use Anthropic Claude API — works from browser without CORS issues
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_KEY}`
+        'x-api-key': ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          {role:'system', content: AI_SYSTEM},
-          ...chatHistory
-        ],
-        max_tokens: 800,
-        temperature: 0.3
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        system: AI_SYSTEM,
+        messages: chatHistory
       })
     });
 
     const data = await response.json();
     hideTyping();
 
-    if(data.choices && data.choices[0]){
-      const reply = data.choices[0].message.content;
+    if(data.content && data.content[0]){
+      const reply = data.content[0].text;
       chatHistory.push({role:'assistant', content: reply});
       addAIMessage(reply);
-
-      // Flash badge if panel closed
-      if(!aiOpen){
-        document.getElementById('aiBadge').style.display = 'flex';
-      }
+      if(!aiOpen) document.getElementById('aiBadge').style.display = 'flex';
     } else if(data.error){
       addAIMessage(`שגיאה: ${data.error.message}`);
     }
   } catch(e){
     hideTyping();
-    addAIMessage('שגיאת חיבור — בדוק את ה-API key וחיבור האינטרנט.');
+    addAIMessage('שגיאת חיבור: ' + e.message);
   }
 
   isTyping = false;

@@ -5,8 +5,157 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#080c18" />
   <title>PhysioMap — מפת גוף לפיזיותרפיסט</title>
+
+  <script src="https://developer.biodigital.com/builds/api/bioviewer.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #080c18 0%, #10192b 100%);
+      color: #ffffff;
+    }
+
+    .topbar {
+      padding: 16px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .subtext {
+      text-align: center;
+      padding: 8px 16px 16px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 12px 16px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      min-width: 120px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #viewer {
+      width: 100%;
+      height: 72vh;
+      background: #0b1220;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .status {
+      text-align: center;
+      padding: 8px 12px;
+      font-size: 14px;
+      color: #f8fafc;
+    }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div class="topbar">PhysioMap</div>
+  <div class="subtext">מודל גוף אינטראקטיבי לפיזיותרפיה</div>
+
+  <div class="controls">
+    <button onclick="loadMale()">גוף גבר</button>
+    <button onclick="loadFemale()">גוף אישה</button>
+    <button onclick="showMuscles()">שרירים</button>
+    <button onclick="showSkeleton()">שלד</button>
+    <button onclick="resetView()">איפוס</button>
+  </div>
+
+  <div class="status" id="status">טוען מודל...</div>
+  <div id="viewer"></div>
+
+  <div class="footer">BioDigital Viewer מחובר ל־GitHub Pages</div>
+
+  <script>
+    let human;
+
+    function setStatus(text) {
+      document.getElementById("status").textContent = text;
+    }
+
+    function initViewer(humanId = "maleAdult") {
+      setStatus("טוען מודל...");
+
+      document.getElementById("viewer").innerHTML = "";
+
+      human = new BioDigitalHuman("viewer", {
+        apiKey: "8abed64a1cea795cb0b9fd2d7c65d3c00f19c748",
+        humanId: humanId
+      });
+
+      setTimeout(() => {
+        setStatus("המודל נטען");
+      }, 2500);
+    }
+
+    function loadMale() {
+      initViewer("maleAdult");
+      setStatus("נטען מודל גוף גבר");
+    }
+
+    function loadFemale() {
+      initViewer("femaleAdult");
+      setStatus("נטען מודל גוף אישה");
+    }
+
+    function showMuscles() {
+      if (!human) return;
+      setStatus("מציג מערכת שרירים");
+      try {
+        human.send("loadModule", "muscular_system");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    function showSkeleton() {
+      if (!human) return;
+      setStatus("מציג מערכת שלד");
+      try {
+        human.send("loadModule", "skeletal_system");
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    function resetView() {
+      initViewer("maleAdult");
+      setStatus("המודל אופס");
+    }
+
+    initViewer();
+  </script>
 </body>
 </html>

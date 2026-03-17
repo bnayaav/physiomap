@@ -3,67 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhysioMap — BioDigital</title>
+<title>PhysioMap — BioDigital 3D</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#060a14;--panel:#0d1526;--b1:#1a2e4a;--b2:#253d62;--accent:#00cfe8;--t1:#e2e8f0;--t2:#94a3b8;--t3:#4a6580}
 html,body{width:100%;height:100%;overflow:hidden;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t1);direction:rtl}
 #app{display:flex;flex-direction:column;height:100dvh}
 
-header{height:52px;background:var(--panel);border-bottom:1px solid var(--b1);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 16px;flex-shrink:0;gap:10px;z-index:10}
+header{height:52px;background:var(--panel);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;gap:10px}
 .logo{font-size:1rem;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:8px}
 .sub{font-size:.68rem;color:var(--t3);border-right:1px solid var(--b1);padding-right:8px;margin-right:2px}
-#patInp{background:#121e32;border:1px solid var(--b1);border-radius:6px;color:var(--t1);
-  font-size:.82rem;padding:5px 10px;outline:none;direction:rtl;width:150px;transition:border .2s}
+#patInp{background:#121e32;border:1px solid var(--b1);border-radius:6px;color:var(--t1);font-size:.82rem;padding:5px 10px;outline:none;direction:rtl;width:150px;transition:border .2s}
 #patInp:focus{border-color:var(--accent)}
 #patInp::placeholder{color:var(--t3)}
-#mmb{display:none;background:#121e32;border:1px solid var(--b1);color:var(--t2);
-  border-radius:6px;padding:6px 11px;font-size:1rem;cursor:pointer}
+#mmb{display:none;background:#121e32;border:1px solid var(--b1);color:var(--t2);border-radius:6px;padding:6px 11px;font-size:1rem;cursor:pointer}
 
 #main{display:flex;flex:1;overflow:hidden;min-height:0}
 
-/* LEFT */
-#left{width:185px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--b1);
-  padding:12px 8px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+#left{width:185px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--b1);padding:12px 8px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
 .stitle{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
 .grow{display:flex;border:1px solid var(--b1);border-radius:7px;overflow:hidden}
-.gbtn{flex:1;padding:7px 4px;background:transparent;border:none;color:var(--t3);
-  cursor:pointer;font-size:.86rem;transition:all .2s}
+.gbtn{flex:1;padding:7px 4px;background:transparent;border:none;color:var(--t3);cursor:pointer;font-size:.86rem;transition:all .2s}
 .gbtn.on{background:rgba(0,207,232,.12);color:var(--accent);font-weight:600}
-.mbtn{display:flex;align-items:center;gap:7px;width:100%;padding:8px 10px;
-  background:transparent;border:1px solid transparent;border-radius:6px;
-  color:var(--t2);cursor:pointer;font-size:.82rem;transition:all .18s;
-  margin-bottom:3px;text-align:right}
+.mbtn{display:flex;align-items:center;gap:7px;width:100%;padding:8px 10px;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--t2);cursor:pointer;font-size:.82rem;transition:all .18s;margin-bottom:3px;text-align:right}
 .mbtn:hover{background:#121e32;border-color:var(--b1);color:var(--t1)}
 .mbtn.on{background:#121e32;border-color:var(--b2);color:var(--t1)}
 .mdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .mlbl{flex:1;text-align:right}
 .mck{font-size:.72rem;color:#38c975;width:12px}
 .qpts{display:flex;flex-wrap:wrap;gap:4px}
-.qpt{padding:4px 7px;background:#121e32;border:1px solid var(--b1);border-radius:4px;
-  color:var(--t3);font-size:.65rem;cursor:pointer;transition:all .15s;font-family:monospace;font-weight:600}
+.qpt{padding:4px 7px;background:#121e32;border:1px solid var(--b1);border-radius:4px;color:var(--t3);font-size:.65rem;cursor:pointer;transition:all .15s;font-family:monospace;font-weight:600}
 .qpt:hover,.qpt.on{border-color:var(--qc);color:var(--qc)}
 .qpt.on{background:rgba(255,255,255,.04)}
 
-/* BIODIGITAL */
-#bdWrap{flex:1;position:relative;overflow:hidden}
+#bdWrap{flex:1;position:relative;overflow:hidden;background:#000}
 #bdFrame{width:100%;height:100%;border:none;display:block}
-#ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:14px;background:var(--bg);z-index:10;transition:opacity .6s}
+#ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:10;transition:opacity .8s}
 #ov.gone{opacity:0;pointer-events:none}
-.spin{width:44px;height:44px;border:3px solid var(--b1);border-top-color:var(--accent);
-  border-radius:50%;animation:sp .8s linear infinite}
+.spin{width:44px;height:44px;border:3px solid var(--b1);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .olt{font-size:.9rem;color:var(--t3)}
 .ols{font-size:.75rem;color:#2a4060}
+#mib{display:none;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;border:none;border-radius:20px;padding:8px 20px;font-size:.84rem;font-weight:700;cursor:pointer;white-space:nowrap;z-index:6;box-shadow:0 4px 20px rgba(0,207,232,.4)}
 
-/* RIGHT */
-#right{width:260px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--b1);
-  overflow-y:auto;display:flex;flex-direction:column}
-.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:10px;text-align:center;padding:24px;color:var(--t3)}
+#right{width:260px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--b1);overflow-y:auto;display:flex;flex-direction:column}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;color:var(--t3)}
 .eico{font-size:3.5rem;opacity:.2}
 .et{font-size:.92rem;color:var(--t2);font-weight:600}
 .es{font-size:.8rem;line-height:1.65}
@@ -95,20 +79,12 @@ header{height:52px;background:var(--panel);border-bottom:1px solid var(--b1);
 .savebtn:hover{background:rgba(0,207,232,.2)}
 .savebtn.ok{background:rgba(56,201,117,.1);border-color:rgba(56,201,117,.3);color:#38c975}
 
-/* MOBILE */
-#mbar{display:none;flex-shrink:0;background:var(--panel);border-top:1px solid var(--b1);
-  padding:7px 8px;gap:4px;align-items:center;flex-wrap:wrap;justify-content:center}
-.mlb{padding:5px 9px;background:#121e32;border:1px solid var(--b1);border-radius:5px;
-  color:var(--t3);font-size:.7rem;cursor:pointer;transition:all .18s}
+#mbar{display:none;flex-shrink:0;background:var(--panel);border-top:1px solid var(--b1);padding:7px 8px;gap:4px;align-items:center;flex-wrap:wrap;justify-content:center}
+.mlb{padding:5px 9px;background:#121e32;border:1px solid var(--b1);border-radius:5px;color:var(--t3);font-size:.7rem;cursor:pointer;transition:all .18s}
 .mlb.on{border-color:var(--mc);color:var(--mc);background:rgba(255,255,255,.04)}
-#mib{display:none;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
-  background:var(--accent);color:#000;border:none;border-radius:20px;
-  padding:8px 20px;font-size:.84rem;font-weight:700;cursor:pointer;
-  white-space:nowrap;z-index:6;box-shadow:0 4px 20px rgba(0,207,232,.4)}
 #drw{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:none;align-items:flex-end}
 #drw.open{display:flex}
-#drwb{background:var(--panel);border-top:1px solid var(--b1);width:100%;max-height:78vh;
-  overflow-y:auto;border-radius:16px 16px 0 0;padding:13px 13px 26px;position:relative}
+#drwb{background:var(--panel);border-top:1px solid var(--b1);width:100%;max-height:78vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:13px 13px 26px;position:relative}
 .dh{width:36px;height:4px;background:var(--b1);border-radius:2px;margin:0 auto 12px}
 .dcl{position:absolute;top:13px;left:13px;background:transparent;border:none;color:var(--t3);font-size:1.3rem;cursor:pointer}
 
@@ -158,8 +134,7 @@ header{height:52px;background:var(--panel);border-bottom:1px solid var(--b1);
       <div class="olt">טוען BioDigital Human...</div>
       <div class="ols" id="lst">מודל אנטומי מקצועי</div>
     </div>
-    <iframe id="bdFrame" allowfullscreen allow="xr-spatial-tracking *"
-      src="about:blank"></iframe>
+    <iframe id="bdFrame" allowfullscreen allow="xr-spatial-tracking *" src="about:blank"></iframe>
     <button id="mib" onclick="openDrw('info')" style="display:none">פרטי נקודה ↑</button>
   </div>
 
@@ -185,93 +160,71 @@ header{height:52px;background:var(--panel);border-bottom:1px solid var(--b1);
 </div>
 
 <script>
-const DK = '8abed64a1cea795cb0b9fd2d7c65d3c00f19c748';
-const PAID = 'o_264de3e5';
+// ═══════════════════════════════════════════
+// המודלים שפרסמת — עם ה-IDs המדויקים
+// ═══════════════════════════════════════════
+const PARAMS = 'ui-anatomy-descriptions=true&ui-anatomy-labels=true&ui-fullscreen=true&ui-layers=true&ui-nav=true&ui-search=true&ui-tools=true&ui-info=true&ui-menu=true&ui-undo=true&initial.none=true&disable-scroll=false&dk=8abed64a1cea795cb0b9fd2d7c65d3c00f19c748&paid=o_264de3e5';
 
-// BioDigital model IDs — using the exact published URL format
 const MODELS = {
   male: {
-    full:     '74hv',   // Male Complete Anatomy — your published model!
-    muscles:  'production/maleAdult/male_muscular_system',
-    skeleton: 'production/maleAdult/male_skeletal_system',
-    vessels:  'production/maleAdult/male_cardiovascular_system',
-    nerves:   'production/maleAdult/male_nervous_system',
+    full:     '74hv',  // Male Complete Anatomy
+    muscles:  '74i1',  // Male Muscular System
+    skeleton: '74i0',  // Male Skeletal System
+    vessels:  '74hz',  // Male Cardiovascular System
+    nerves:   '74hy',  // Male Nervous System
+    fascia:   '74hx',  // Male Fascia / extra
   },
   female: {
-    full:     'production/femaleAdult/female_region_anatomy',
-    muscles:  'production/femaleAdult/female_muscular_system',
-    skeleton: 'production/femaleAdult/female_skeletal_system',
-    vessels:  'production/femaleAdult/female_cardiovascular_system',
-    nerves:   'production/femaleAdult/female_nervous_system',
+    full:     '74hv',  // fallback to male until female published
+    muscles:  '74i1',
+    skeleton: '74i0',
+    vessels:  '74hz',
+    nerves:   '74hy',
+    fascia:   '74hx',
   }
 };
 
 const SLABELS = {
   full:    {lbl:'אנטומיה מלאה', color:'#00cfe8', em:'🫀'},
-  muscles: {lbl:'שרירים',       color:'#ff6633', em:'💪'},
-  skeleton:{lbl:'שלד',          color:'#e8d5b0', em:'🦴'},
+  muscles: {lbl:'שרירים',       color:'#ff5533', em:'💪'},
+  skeleton:{lbl:'שלד ועצמות',   color:'#e8d5b0', em:'🦴'},
   vessels: {lbl:'כלי דם',       color:'#ef4444', em:'🩸'},
   nerves:  {lbl:'עצבים',        color:'#9ee840', em:'⚡'},
+  fascia:  {lbl:'פאשיה/גידים',  color:'#fbbf24', em:'🔗'},
 };
 
 const TPS = {
-  TP_UPPER_TRAP:{id:'TP_UPPER_TRAP',nameHe:'Trapezius עליון',nameEn:'Upper Trapezius TP',system:'שריר טרפזיוס',color:'#f87171',pl:5,location:'אמצע הקו בין צוואר לכתף — טרפזיוס עליון',usage:'כאב עורף, כאבי ראש מתח, נוקשות כתף, כאב מופנה לאזמל',technique:'לחץ עמוק עם אגודל/מרפק. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'עמוק',tags:['טרפזיוס','עורף'],warnings:['אסור בהריון!']},
-  TP_SCM:{id:'TP_SCM',nameHe:'SCM — סטרנוקלידומסטואיד',nameEn:'Sternocleidomastoid TP',system:'שריר SCM — צוואר',color:'#fb923c',pl:2,location:'לאורך הצוואר, בין האוזן לעצם הבריח',usage:'כאבי ראש, מיגרנה, ורטיגו, טינטון',technique:'פינצ׳ עדין לאורך השריר. 20–40 שנ׳.',duration:'20–40 שנ׳',pressure:'עדין',tags:['צוואר','כאבי ראש'],warnings:['קרוב לעורק קרוטיד!']},
-  TP_SUPRASPINATUS:{id:'TP_SUPRASPINATUS',nameHe:'Supraspinatus',nameEn:'Supraspinatus TP',system:'שרוול כתף',color:'#fbbf24',pl:5,location:'מעל קוץ השכמה, פוסה סופראספינאלית',usage:'כאב כתף עמוק, קשיי הרמה לצד, כאב לילי',technique:'לחץ עמוק מעל השכמה. 45–60 שנ׳.',duration:'45–60 שנ׳',pressure:'עמוק',tags:['כתף','שרוול כתף'],warnings:['לא אחרי ניתוח']},
-  TP_INFRASPINATUS:{id:'TP_INFRASPINATUS',nameHe:'Infraspinatus',nameEn:'Infraspinatus TP',system:'שרוול כתף',color:'#fbbf24',pl:5,location:'מתחת לקוץ השכמה, פוסה אינפראספינאלית',usage:'כאב מופנה לכתף קדמי, הגבלת סיבוב פנימי',technique:'לחץ עמוק. 40–60 שנ׳.',duration:'40–60 שנ׳',pressure:'עמוק',tags:['כתף','שרוול כתף'],warnings:[]},
-  TP_RHOMBOID:{id:'TP_RHOMBOID',nameHe:'Rhomboid',nameEn:'Rhomboid TP',system:'גב עליון',color:'#34d399',pl:4,location:'בין עמוד השדרה לקצה הפנימי של השכמה',usage:'כאב חד בין השכמות, כאב בנשימה עמוקה',technique:'לחץ עמוק עם מרפק. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'עמוק',tags:['גב עליון','שכמות'],warnings:[]},
-  TP_QL:{id:'TP_QL',nameHe:'Quadratus Lumborum',nameEn:'QL TP',system:'גב תחתון',color:'#ef4444',pl:6,location:'בין צלע 12 לכסל, לצד עמוד השדרה',usage:'כאב גב תחתון חריף, כאב בשינוי תנוחה',technique:'לחץ עמוק מאוד מרפק. 60–90 שנ׳.',duration:'60–90 שנ׳',pressure:'עמוק מאוד',tags:['גב תחתון','QL'],warnings:['זהירות כליות','זהירות דיסק']},
-  TP_PIRIFORMIS:{id:'TP_PIRIFORMIS',nameHe:'Piriformis',nameEn:'Piriformis TP',system:'ישבן',color:'#ef4444',pl:6,location:'אמצע הקו בין זנב הסוס ל-Greater Trochanter',usage:'כאב ישבן, סיאטיקה מדומה, קרינה לרגל',technique:'לחץ עמוק מרפק. 60–90 שנ׳. שכיבה על הצד.',duration:'60–90 שנ׳',pressure:'עמוק מאוד',tags:['ירך','סיאטיקה','ישבן'],warnings:['עצב סיאטי קרוב!']},
-  TP_GLUTEUS:{id:'TP_GLUTEUS',nameHe:'Gluteus Medius',nameEn:'Gluteus Medius TP',system:'ישבן',color:'#fb923c',pl:5,location:'שליש עליון של גלוטאוס מדיוס',usage:'כאב ישבן, כאב מופנה לגב תחתון ולירך',technique:'לחץ עמוק. 45–60 שנ׳.',duration:'45–60 שנ׳',pressure:'עמוק',tags:['ישבן','ירך'],warnings:[]},
-  TP_ITB:{id:'TP_ITB',nameHe:'IT Band',nameEn:'IT Band TP',system:'צד חיצוני ירך',color:'#60a5fa',pl:5,location:'צד חיצוני ירך, אמצע הקו כסל–ברך',usage:"Runner's Knee, כאב ברך חיצוני, חיכוך IT Band",technique:'לחץ ישיר עם מרפק. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'חזק',tags:['ברך','IT Band','ריצה'],warnings:[]},
-  TP_VMO:{id:'TP_VMO',nameHe:'VMO — Vastus Medialis',nameEn:'VMO TP',system:'ירך פנימית',color:'#60a5fa',pl:5,location:'ירך פנימית תחתונה, מעל הברך',usage:'כאב ברך פנימי, Patellofemoral syndrome',technique:'לחץ עמוק עם אגודל. 30–45 שנ׳.',duration:'30–45 שנ׳',pressure:'עמוק',tags:['ברך','פיקה','VMO'],warnings:[]},
-  TP_GASTROCNEMIUS:{id:'TP_GASTROCNEMIUS',nameHe:'Gastrocnemius',nameEn:'Gastrocnemius TP',system:'שוק',color:'#a78bfa',pl:4,location:'בטן השוק — חלק עליון-מרכזי',usage:'התכווצויות לילה, כאב עגל, כאב מאחורי הברך',technique:'לחץ ישיר עם אגודלות. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'חזק',tags:['שוק','התכווצות'],warnings:[]},
-  TP_PLANTAR:{id:'TP_PLANTAR',nameHe:'Plantar Fascia',nameEn:'Plantar Fascia TP',system:'כף רגל',color:'#a78bfa',pl:5,location:'עקב וקמרון כף הרגל',usage:'Plantar fasciitis, כאב עקב בבוקר',technique:'לחץ עמוק + גלגול כדור. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'עמוק',tags:['עקב','Plantar Fasciitis'],warnings:[]},
+  TP_UPPER_TRAP:{id:'TP_UPPER_TRAP',nameHe:'Trapezius עליון',nameEn:'Upper Trapezius TP',system:'שריר טרפזיוס',color:'#f87171',pl:5,location:'אמצע הקו בין צוואר לכתף — טרפזיוס עליון',usage:'כאב עורף, כאבי ראש מתח, נוקשות כתף, כאב מופנה לאזמל',technique:'לחץ עמוק עם אגודל/מרפק. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'עמוק',tags:['טרפזיוס','עורף'],warnings:['אסור בהריון!'],scene:'muscles'},
+  TP_SCM:{id:'TP_SCM',nameHe:'SCM — צוואר',nameEn:'Sternocleidomastoid TP',system:'שריר SCM',color:'#fb923c',pl:2,location:'לאורך הצוואר, בין האוזן לעצם הבריח',usage:'כאבי ראש, מיגרנה, ורטיגו, טינטון',technique:'פינצ׳ עדין. 20–40 שנ׳.',duration:'20–40 שנ׳',pressure:'עדין',tags:['צוואר','כאבי ראש'],warnings:['קרוב לעורק קרוטיד!'],scene:'muscles'},
+  TP_SUPRASPINATUS:{id:'TP_SUPRASPINATUS',nameHe:'Supraspinatus',nameEn:'Supraspinatus TP',system:'שרוול כתף',color:'#fbbf24',pl:5,location:'מעל קוץ השכמה, פוסה סופראספינאלית',usage:'כאב כתף עמוק, קשיי הרמה לצד, כאב לילי',technique:'לחץ עמוק. 45–60 שנ׳.',duration:'45–60 שנ׳',pressure:'עמוק',tags:['כתף','שרוול כתף'],warnings:[],scene:'muscles'},
+  TP_INFRASPINATUS:{id:'TP_INFRASPINATUS',nameHe:'Infraspinatus',nameEn:'Infraspinatus TP',system:'שרוול כתף',color:'#fbbf24',pl:5,location:'מתחת לקוץ השכמה, פוסה אינפראספינאלית',usage:'כאב מופנה לכתף קדמי, הגבלת סיבוב פנימי',technique:'לחץ עמוק. 40–60 שנ׳.',duration:'40–60 שנ׳',pressure:'עמוק',tags:['כתף','שרוול כתף'],warnings:[],scene:'muscles'},
+  TP_RHOMBOID:{id:'TP_RHOMBOID',nameHe:'Rhomboid',nameEn:'Rhomboid TP',system:'גב עליון',color:'#34d399',pl:4,location:'בין עמוד השדרה לקצה הפנימי של השכמה',usage:'כאב חד בין השכמות, כאב בנשימה עמוקה',technique:'לחץ עמוק עם מרפק. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'עמוק',tags:['גב עליון','שכמות'],warnings:[],scene:'muscles'},
+  TP_QL:{id:'TP_QL',nameHe:'Quadratus Lumborum',nameEn:'QL TP',system:'גב תחתון',color:'#ef4444',pl:6,location:'בין צלע 12 לכסל, לצד עמוד השדרה',usage:'כאב גב תחתון חריף, כאב בשינוי תנוחה',technique:'לחץ עמוק מאוד מרפק. 60–90 שנ׳.',duration:'60–90 שנ׳',pressure:'עמוק מאוד',tags:['גב תחתון','QL'],warnings:['זהירות כליות','זהירות דיסק'],scene:'muscles'},
+  TP_PIRIFORMIS:{id:'TP_PIRIFORMIS',nameHe:'Piriformis',nameEn:'Piriformis TP',system:'ישבן',color:'#ef4444',pl:6,location:'אמצע הקו בין זנב הסוס ל-Greater Trochanter',usage:'כאב ישבן, סיאטיקה מדומה, קרינה לרגל',technique:'לחץ עמוק מרפק. 60–90 שנ׳. שכיבה על הצד.',duration:'60–90 שנ׳',pressure:'עמוק מאוד',tags:['ירך','סיאטיקה'],warnings:['עצב סיאטי קרוב!'],scene:'muscles'},
+  TP_GLUTEUS:{id:'TP_GLUTEUS',nameHe:'Gluteus Medius',nameEn:'Gluteus Medius TP',system:'ישבן',color:'#fb923c',pl:5,location:'שליש עליון של גלוטאוס מדיוס',usage:'כאב ישבן, כאב מופנה לגב תחתון ולירך',technique:'לחץ עמוק. 45–60 שנ׳.',duration:'45–60 שנ׳',pressure:'עמוק',tags:['ישבן','ירך'],warnings:[],scene:'muscles'},
+  TP_ITB:{id:'TP_ITB',nameHe:'IT Band',nameEn:'IT Band TP',system:'צד חיצוני ירך',color:'#60a5fa',pl:5,location:'צד חיצוני ירך, אמצע הקו כסל–ברך',usage:"Runner's Knee, כאב ברך חיצוני",technique:'לחץ מרפק. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'חזק',tags:['ברך','IT Band'],warnings:[],scene:'fascia'},
+  TP_VMO:{id:'TP_VMO',nameHe:'VMO — Vastus Medialis',nameEn:'VMO TP',system:'ירך פנימית',color:'#60a5fa',pl:5,location:'ירך פנימית תחתונה, מעל הברך',usage:'כאב ברך פנימי, Patellofemoral syndrome',technique:'לחץ עמוק אגודל. 30–45 שנ׳.',duration:'30–45 שנ׳',pressure:'עמוק',tags:['ברך','פיקה'],warnings:[],scene:'muscles'},
+  TP_GASTROCNEMIUS:{id:'TP_GASTROCNEMIUS',nameHe:'Gastrocnemius',nameEn:'Gastrocnemius TP',system:'שוק',color:'#a78bfa',pl:4,location:'בטן השוק — חלק עליון-מרכזי',usage:'התכווצויות לילה, כאב עגל',technique:'לחץ אגודלות. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'חזק',tags:['שוק','התכווצות'],warnings:[],scene:'muscles'},
+  TP_PLANTAR:{id:'TP_PLANTAR',nameHe:'Plantar Fascia',nameEn:'Plantar Fascia TP',system:'כף רגל',color:'#a78bfa',pl:5,location:'עקב וקמרון כף הרגל',usage:'Plantar fasciitis, כאב עקב בבוקר',technique:'לחץ עמוק + גלגול כדור. 30–60 שנ׳.',duration:'30–60 שנ׳',pressure:'עמוק',tags:['עקב','Plantar Fasciitis'],warnings:[],scene:'fascia'},
 };
 
 const S={gender:'male',scene:'full',selKey:null,notes:{},timer:null};
 
-function buildURL(gender, scene){
+function getURL(gender, scene){
   const id = MODELS[gender][scene];
-  const base = `https://human.biodigital.com/viewer/?id=${id}`;
-  const params = [
-    'ui-anatomy-descriptions=true',
-    'ui-anatomy-labels=true',
-    'ui-fullscreen=true',
-    'ui-layers=true',
-    'ui-nav=true',
-    'ui-search=true',
-    'ui-tools=true',
-    'ui-info=true',
-    'ui-menu=true',
-    'ui-undo=true',
-    'ui-zoom=true',
-    'initial.none=true',
-    'disable-scroll=false',
-    `dk=${DK}`,
-    `paid=${PAID}`,
-  ].join('&');
-  return `${base}&${params}`;
+  return `https://human.biodigital.com/viewer/?id=${id}&${PARAMS}`;
 }
 
 function loadBD(){
-  const url = buildURL(S.gender, S.scene);
-  const ov = document.getElementById('ov');
+  const ov=document.getElementById('ov');
   ov.classList.remove('gone');
-  document.getElementById('lst').textContent = 'טוען מודל אנטומי...';
-
+  document.getElementById('lst').textContent='טוען מודל...';
   if(S.timer) clearTimeout(S.timer);
-  const frame = document.getElementById('bdFrame');
-  frame.src = '';
-  setTimeout(()=>{ frame.src = url; }, 150);
-
-  // Hide loading after 5 seconds regardless
-  S.timer = setTimeout(()=> ov.classList.add('gone'), 8000);
-
-  frame.onload = ()=>{
-    setTimeout(()=> ov.classList.add('gone'), 2000);
-    clearTimeout(S.timer);
-  };
+  const frame=document.getElementById('bdFrame');
+  frame.src='';
+  setTimeout(()=>{ frame.src=getURL(S.gender,S.scene); },150);
+  S.timer=setTimeout(()=>ov.classList.add('gone'),10000);
+  frame.onload=()=>{ clearTimeout(S.timer); setTimeout(()=>ov.classList.add('gone'),2500); };
 }
 
 function setGender(g){
@@ -280,6 +233,7 @@ function setGender(g){
   document.getElementById('gf').classList.toggle('on',g==='female');
   loadBD();
 }
+
 function setScene(sc){
   S.scene=sc;
   buildSceneBtns(); buildMlayers(); loadBD();
@@ -289,6 +243,12 @@ function selectPt(key){
   S.selKey=key;
   buildQpts();
   renderInfo(key);
+  const tp=TPS[key];
+  // Switch to relevant system scene
+  if(tp.scene && tp.scene!==S.scene){
+    S.scene=tp.scene;
+    buildSceneBtns(); buildMlayers(); loadBD();
+  }
   if(window.innerWidth<=700) openDrw('info');
   document.getElementById('mib').style.display='block';
 }

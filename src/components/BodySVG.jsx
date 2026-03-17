@@ -5,23 +5,34 @@ export default function BodySVG({ layers, selectedPoint, onPointClick, gender })
   const isFemale = gender === 'female';
 
   const allPoints = [
-    { id: 'GB20', cx: 100, cy: 50 },
-    { id: 'ST11', cx: 90,  cy: 70 },
-    { id: 'GB21', cx: 78,  cy: 80 }, { id: 'GB21', cx: 122, cy: 80 },
-    { id: 'LI15', cx: 54,  cy: 88 }, { id: 'LI15', cx: 146, cy: 88 },
-    { id: 'CV17', cx: 100, cy: 118 },
-    { id: 'LI11', cx: 34,  cy: 174 }, { id: 'LI11', cx: 166, cy: 174 },
-    { id: 'PC6',  cx: 32,  cy: 234 },
-    { id: 'BL23', cx: 88,  cy: 176 }, { id: 'BL23', cx: 112, cy: 176 },
-    { id: 'GB30', cx: 66,  cy: 216 }, { id: 'GB30', cx: 134, cy: 216 },
-    { id: 'ST36', cx: 68,  cy: 382 }, { id: 'ST36', cx: 132, cy: 382 },
-    { id: 'KD3',  cx: 58,  cy: 460 }, { id: 'KD3',  cx: 142, cy: 460 },
+    // ראש וצוואר
+    { id: 'TP_SCM',           cx: 86,  cy: 56  }, { id: 'TP_SCM',           cx: 114, cy: 56  },
+    { id: 'TP_UPPER_TRAP',    cx: 76,  cy: 80  }, { id: 'TP_UPPER_TRAP',    cx: 124, cy: 80  },
+    { id: 'TP_LEVATOR',       cx: 82,  cy: 88  }, { id: 'TP_LEVATOR',       cx: 118, cy: 88  },
+    // כתף / גב עליון
+    { id: 'TP_SUPRASPINATUS', cx: 62,  cy: 100 }, { id: 'TP_SUPRASPINATUS', cx: 138, cy: 100 },
+    { id: 'TP_INFRASPINATUS', cx: 60,  cy: 115 }, { id: 'TP_INFRASPINATUS', cx: 140, cy: 115 },
+    { id: 'TP_RHOMBOID',      cx: 84,  cy: 120 }, { id: 'TP_RHOMBOID',      cx: 116, cy: 120 },
+    // גב תחתון / ישבן
+    { id: 'TP_QUADRATUS',     cx: 86,  cy: 175 }, { id: 'TP_QUADRATUS',     cx: 114, cy: 175 },
+    { id: 'TP_PIRIFORMIS',    cx: 72,  cy: 212 }, { id: 'TP_PIRIFORMIS',    cx: 128, cy: 212 },
+    // ירך / ברך
+    { id: 'TP_ITB',           cx: 54,  cy: 300 }, { id: 'TP_ITB',           cx: 146, cy: 300 },
+    { id: 'TP_VMO',           cx: 66,  cy: 348 }, { id: 'TP_VMO',           cx: 134, cy: 348 },
+    // שוק / רגל
+    { id: 'TP_GASTROCNEMIUS', cx: 64,  cy: 418 }, { id: 'TP_GASTROCNEMIUS', cx: 136, cy: 418 },
+    { id: 'TP_PLANTAR',       cx: 64,  cy: 480 }, { id: 'TP_PLANTAR',       cx: 136, cy: 480 },
+    // מרפק / יד
+    { id: 'TP_FOREARM_EXT',   cx: 36,  cy: 200 }, { id: 'TP_FOREARM_EXT',   cx: 164, cy: 200 },
   ];
 
   const POINT_COLORS = {
-    GB20:'#00d4ff', ST11:'#a78bfa', GB21:'#f87171', LI15:'#fbbf24',
-    CV17:'#fb923c', LI11:'#34d399', PC6:'#60a5fa',  BL23:'#f87171',
-    GB30:'#4ade80', ST36:'#fbbf24', KD3:'#818cf8',
+    TP_SCM:'#f87171',           TP_UPPER_TRAP:'#f87171',    TP_LEVATOR:'#fb923c',
+    TP_SUPRASPINATUS:'#fbbf24', TP_INFRASPINATUS:'#fbbf24', TP_RHOMBOID:'#34d399',
+    TP_QUADRATUS:'#ef4444',     TP_PIRIFORMIS:'#ef4444',
+    TP_ITB:'#60a5fa',           TP_VMO:'#60a5fa',
+    TP_GASTROCNEMIUS:'#a78bfa', TP_PLANTAR:'#a78bfa',
+    TP_FOREARM_EXT:'#34d399',
   };
 
   return (
@@ -134,7 +145,7 @@ export default function BodySVG({ layers, selectedPoint, onPointClick, gender })
         <ellipse cx="50" cy="88" rx="8" ry="5" fill="rgba(255,255,255,0.1)" />
         <ellipse cx="146" cy="92" rx="16" ry="13" fill="url(#armGradR)" />
 
-        {/* ARMS */}
+        {/* UPPER ARMS */}
         <path d="M42,90 Q30,114 28,148 Q26,166 30,180 Q35,183 40,181 Q45,179 46,176 Q48,162 50,148 Q52,118 54,98 Z" fill="url(#armGradL)" />
         <path d="M36,105 Q33,130 34,158" stroke="rgba(255,255,255,0.1)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <path d="M158,90 Q170,114 172,148 Q174,166 170,180 Q165,183 160,181 Q155,179 154,176 Q152,162 150,148 Q148,118 146,98 Z" fill="url(#armGradR)" />
@@ -167,9 +178,11 @@ export default function BodySVG({ layers, selectedPoint, onPointClick, gender })
         <ellipse cx="70" cy="364" rx="14" ry="12" fill="url(#legGradL)" />
         <ellipse cx="66" cy="360" rx="6" ry="4" fill="rgba(255,255,255,0.12)" />
         <ellipse cx="130" cy="364" rx="14" ry="12" fill="url(#legGradR)" />
+        <ellipse cx="134" cy="360" rx="6" ry="4" fill="rgba(255,255,255,0.1)" />
 
         {/* SHINS */}
         <path d="M57,375 Q53,410 53,446 Q53,464 57,472 Q63,475 70,473 Q75,471 76,468 Q78,460 78,446 Q78,410 76,375 Z" fill="url(#legGradL)" />
+        <path d="M62,385 Q61,425 63,462" stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" fill="none" />
         <path d="M143,375 Q147,410 147,446 Q147,464 143,472 Q137,475 130,473 Q125,471 124,468 Q122,460 122,446 Q122,410 124,375 Z" fill="url(#legGradR)" />
 
         {/* FEET */}
@@ -286,6 +299,7 @@ export default function BodySVG({ layers, selectedPoint, onPointClick, gender })
           <line x1="101" y1="122" x2="101" y2="194" stroke="#3b82f6" strokeWidth="2.2" strokeDasharray="3,2" />
           <path d="M41,116 Q38,145 35,176" fill="none" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
           <path d="M159,116 Q162,145 165,176" fill="none" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
+          <path d="M45,116 Q43,142 42,176" fill="none" stroke="#93c5fd" strokeWidth="1.2" strokeDasharray="2,1.5" />
           <line x1="73" y1="237" x2="71" y2="468" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
           <line x1="127" y1="237" x2="129" y2="468" stroke="#5b9eff" strokeWidth="1.6" strokeDasharray="3,1.5" />
           <line x1="78" y1="237" x2="75" y2="357" stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,1.5" />
@@ -303,11 +317,15 @@ export default function BodySVG({ layers, selectedPoint, onPointClick, gender })
           <path d="M92,74 Q78,80 68,90 Q54,104 44,120" fill="none" stroke="#9ee840" strokeWidth="1.4" strokeDasharray="4,2" />
           <path d="M108,74 Q122,80 132,90 Q146,104 156,120" fill="none" stroke="#9ee840" strokeWidth="1.4" strokeDasharray="4,2" />
           <path d="M44,122 Q36,148 32,182" fill="none" stroke="#bef264" strokeWidth="1.1" strokeDasharray="3,2" />
+          <path d="M38,178 Q35,210 34,250" fill="none" stroke="#9ee840" strokeWidth="1" strokeDasharray="2,1.5" />
+          <path d="M156,122 Q164,148 168,182" fill="none" stroke="#bef264" strokeWidth="1.1" strokeDasharray="3,2" />
           <line x1="82" y1="237" x2="76" y2="360" stroke="#9ee840" strokeWidth="1.6" strokeDasharray="4,2" />
           <line x1="118" y1="237" x2="124" y2="360" stroke="#9ee840" strokeWidth="1.6" strokeDasharray="4,2" />
           <line x1="74" y1="364" x2="68" y2="468" stroke="#bef264" strokeWidth="1.3" strokeDasharray="3,2" />
+          <line x1="77" y1="364" x2="72" y2="468" stroke="#d9f99d" strokeWidth="1" strokeDasharray="2,1.5" />
           <line x1="126" y1="364" x2="132" y2="468" stroke="#bef264" strokeWidth="1.3" strokeDasharray="3,2" />
-          {[[46,78,'פלקסוס ברכיאלי'],[104,102,'חוט שדרה'],[15,135,'רדיאלי'],[55,300,'סיאטי'],[47,433,'פרונאלי']].map(([x,y,t],i) => (
+          <line x1="123" y1="364" x2="128" y2="468" stroke="#d9f99d" strokeWidth="1" strokeDasharray="2,1.5" />
+          {[[46,78,'פלקסוס ברכיאלי'],[104,102,'חוט שדרה'],[15,135,'רדיאלי'],[13,218,'אולנר/מדיאני'],[55,300,'סיאטי'],[47,433,'פרונאלי']].map(([x,y,t],i) => (
             <text key={i} x={x} y={y} fill="#d9f99d" fontSize="4.5" fontFamily="sans-serif">{t}</text>
           ))}
         </g>
@@ -332,4 +350,4 @@ export default function BodySVG({ layers, selectedPoint, onPointClick, gender })
       })}
     </svg>
   );
-}
+          }

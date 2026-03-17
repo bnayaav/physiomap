@@ -1,46 +1,103 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PhysioMap 3D</title>
+
+  <script src="https://developer.biodigital.com/builds/api/2/human-api.min.js"></script>
 
   <style>
     body {
       margin: 0;
-      background: #000;
+      background: #08101f;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+      justify-content: center;
+      background: #0d1528;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .toolbar button {
+      background: #16233f;
+      color: white;
+      border: 1px solid #2c406b;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .toolbar button:hover {
+      background: #22345d;
+    }
+
+    #bodyWidget {
+      width: 100%;
+      height: calc(100vh - 70px);
+      border: 0;
+      display: block;
     }
   </style>
-
-  <!-- 🔥 SDK של BioDigital -->
-  <script src="https://developer.biodigital.com/builds/api/2/human-api.min.js"></script>
 </head>
-
 <body>
 
-<!-- 🧠 המודל -->
-<iframe id="bodyWidget"
-  src="https://human.biodigital.com/widget/?id=production/maleAdult/male_region_anatomy&ui-anatomy-descriptions=true&ui-fullscreen=true&dk=8abed64a1cea795cb0b9fd2d7c65d3c00f19c748"
-  width="100%" height="600px">
-</iframe>
+  <div class="toolbar">
+    <button onclick="showLayer('Muscular System')">הצג שרירים</button>
+    <button onclick="hideLayer('Muscular System')">הסתר שרירים</button>
 
-<!-- 🔥 הקוד שלך -->
-<script>
-  const human = new HumanAPI("bodyWidget");
+    <button onclick="showLayer('Skeletal System')">הצג שלד</button>
+    <button onclick="hideLayer('Skeletal System')">הסתר שלד</button>
 
-  human.on("ready", function() {
-    console.log("המודל נטען");
+    <button onclick="focusHeart()">לב</button>
+    <button onclick="resetView()">איפוס</button>
+  </div>
 
-    // הצג שרירים
-    human.send("scene.setLayer", {
-      layer: "Muscular System",
-      visible: true
+  <iframe
+    id="bodyWidget"
+    src="https://human.biodigital.com/widget/?id=production/maleAdult/male_full&ui-fullscreen=true&ui-anatomy-descriptions=true&dk=8abed64a1cea795cb0b9fd2d7c65d3c00f19c748">
+  </iframe>
+
+  <script>
+    const human = new HumanAPI("bodyWidget");
+
+    human.on("ready", function () {
+      console.log("BioDigital מוכן");
     });
-  });
 
-  human.pick.on("picked", function(e) {
-    console.log("לחצת על:", e.objectName);
-  });
-</script>
+    function showLayer(layerName) {
+      human.send("scene.setLayer", {
+        layer: layerName,
+        visible: true
+      });
+    }
+
+    function hideLayer(layerName) {
+      human.send("scene.setLayer", {
+        layer: layerName,
+        visible: false
+      });
+    }
+
+    function focusHeart() {
+      // אם יש לך אובייקט/מודל לב מדויק מהמערכת, נחליף לכיוון מדויק יותר.
+      // כרגע זו תבנית התחלתית.
+      human.send("camera.reset");
+    }
+
+    function resetView() {
+      human.send("camera.reset");
+    }
+  </script>
 
 </body>
 </html>

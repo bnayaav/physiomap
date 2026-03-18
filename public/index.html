@@ -532,7 +532,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 // ══════════════════════════════════════════
 // AI MEDICAL ASSISTANT
 // ══════════════════════════════════════════
-const ANTHROPIC_KEY = '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'; // ← הכנס Claude API key מ-console.anthropic.com
+const API_URL = 'https://physio-ai.bnaya-av.workers.dev/';
 
 const AI_SYSTEM = `You are a clinical physiotherapy AI assistant. 
 Answer ONLY based on evidence from official medical sources: PubMed, APTA Clinical Practice Guidelines, JOSPT, Cochrane Reviews, NICE Guidelines, and WHO.
@@ -583,33 +583,24 @@ async function sendToAI(){
   document.getElementById('aiSend').disabled = true;
 
   try {
-    // Use Anthropic Claude API — works from browser without CORS issues
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
-        system: AI_SYSTEM,
-        messages: chatHistory
+        message: fullText,
+        history: chatHistory.slice(0,-1) // send history without last message
       })
     });
 
     const data = await response.json();
     hideTyping();
 
-    if(data.content && data.content[0]){
-      const reply = data.content[0].text;
-      chatHistory.push({role:'assistant', content: reply});
-      addAIMessage(reply);
+    if(data.reply){
+      chatHistory.push({role:'assistant', content: data.reply});
+      addAIMessage(data.reply);
       if(!aiOpen) document.getElementById('aiBadge').style.display = 'flex';
     } else if(data.error){
-      addAIMessage(`שגיאה: ${data.error.message}`);
+      addAIMessage('שגיאה: ' + data.error);
     }
   } catch(e){
     hideTyping();
